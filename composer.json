@@ -1,0 +1,13 @@
+{
+  "name": "xcl3721/whetstone",
+  "description": "an swoole whetstone framework",
+  "type": "project",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "xuchanglong",
+      "email": "xuchanglong@100tal.com"
+    }
+  ],
+  "require": {}
+}
