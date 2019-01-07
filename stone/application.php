@@ -69,7 +69,7 @@ class Application
 
     }
 
-    function ExceptionHandle(\Exception $e)
+    function ExceptionHandle($e)
     {
         //if(php_sapi_name() == "cli"){
         var_dump("Exception Founded:");

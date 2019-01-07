@@ -1,6 +1,6 @@
 <?php
 namespace WhetStone\Stone\Server;
 
-class Event{
+class Hook{
 
 }

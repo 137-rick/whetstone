@@ -71,13 +71,13 @@ $params = getopt('hvdc:p:');
 //config load
 if (isset($params["c"])) {
     if (!file_exists($params["c"])) {
-        die("config file not found..");
+        die("config file not found..".PHP_EOL);
     }
 
     echo "loading special config:" . $params["c"] . PHP_EOL;
     $config = include($params["c"]);
 } else {
-    die("You must special the config file with -c option.");
+    die("You must special the config file with -c option.".PHP_EOL);
 }
 
 //debug mode
@@ -123,8 +123,9 @@ switch ($funcName) {
     case 'reload':
         {
             // SIGUSR1
-            echo 'reload:' . $config['server']['server_name'] . PHP_EOL;
             $pid = file_get_contents($config['swoole']['pid_file']);
+            echo 'reload:' . $config['server']['server_name'] ." pid:" . $pid . PHP_EOL;
+
             if ($pid > 0) {
                 $cmd = "kill -s 10 $pid";
                 $ret = exec($cmd, $outStr);
@@ -141,7 +142,7 @@ switch ($funcName) {
             // stop、start
             $pid = file_get_contents($config['swoole']['pid_file']);
 
-            echo 'stop:' . $config['server']['server_name'] . PHP_EOL;
+            echo 'stop:' . $config['server']['server_name'] . " pid:". $pid . PHP_EOL;
             $cmd = "kill  $pid";
             exec($cmd, $outStr);
 
@@ -158,7 +159,7 @@ switch ($funcName) {
         {
             //暴力kill
             $name = $config['server']['server_name'];
-            echo 'kill:' . $config['server']['server_name'] . PHP_EOL;
+            echo 'kill:' . $name . PHP_EOL;
             $cmd = "ps -ef | grep $name | grep -v grep | cut -c 9-15 | xargs kill -s 9 ";
             exec($cmd, $outStr);
             break;
