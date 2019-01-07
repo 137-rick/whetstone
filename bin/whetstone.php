@@ -1,5 +1,5 @@
 <?php
-require_once("../init.php");
+require_once "../init.php";
 
 function help()
 {
@@ -8,52 +8,46 @@ function help()
     $helpDom .= "=======================================" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
-    $helpDom .= "CMD: php whetstone.php -c ../config/config.php start" . PHP_EOL;
+    $helpDom .= "CMD: php whetstone.php -c ../config/server.php start" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
     $helpDom .= "Option:" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
-    $helpDom .= "\t-h\t\t查看帮助文件" . PHP_EOL;
+    $helpDom .= "\t-h\t\tthis help info" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
-    $helpDom .= "\t-c config.php\t 使用指定配置文件" . PHP_EOL;
+    $helpDom .= "\t-c config.php\t set config file" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
-    $helpDom .= "\t-v\t\t 开启debug模式" . PHP_EOL;
+    $helpDom .= "\t-d\t\tdaemon mode. product mode" . PHP_EOL;
+    $helpDom .= "" . PHP_EOL;
+
+    $helpDom .= "\t-v\t\tshow php debug info on console" . PHP_EOL;
+    $helpDom .= "" . PHP_EOL;
+
+    $helpDom .= "\t-p\t\tpid file path" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
     $helpDom .= "CMD:" . PHP_EOL;
 
-    $helpDom .= "\tstart\t\t服务启动" . PHP_EOL;
+    $helpDom .= "\tstart\t\tstart server" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
-    $helpDom .= "\tstop\t\t停止服务" . PHP_EOL;
+    $helpDom .= "\tstop\t\tstop server" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
-    $helpDom .= "\tkill\t\t直接杀死服务" . PHP_EOL;
+    $helpDom .= "\tkill\t\tkill all server process" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
-    $helpDom .= "\trestart\t\t重启服务" . PHP_EOL;
+    $helpDom .= "\trestart\t\trestart server" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
-    $helpDom .= "\treload\t\t平滑reload服务" . PHP_EOL;
+    $helpDom .= "\treload\t\treload file for worker" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
     $helpDom .= "---------------------------------------" . PHP_EOL;
 
     echo $helpDom;
-}
-
-function parseArgvs($argv)
-{
-    $params = getopt('hvc:');
-    $count  = count($argv);
-    if ($argv[$count - 1] == '&') {
-        $params['action'] = $argv[$count - 2];
-    } else {
-        $params['action'] = $argv[$count - 1];
-    }
-    return $params;
 }
 
 
@@ -72,37 +66,51 @@ if (swoole_version() < 4) {
 }
 
 //parser argument
-$params = parseArgvs($argv);
+$params = getopt('hvdc:p:');
 
 //config load
-if (isset($params["c"]) && file_exists($params["c"])) {
+if (isset($params["c"])) {
+    if (!file_exists($params["c"])) {
+        die("config file not found..");
+    }
+
     echo "loading special config:" . $params["c"] . PHP_EOL;
-    require_once($params["c"]);
+    $config = include($params["c"]);
+} else {
+    die("You must special the config file with -c option.");
 }
 
 //debug mode
 if (isset($params['v'])) {
     ini_set("display_errors", "On");
     error_reporting(E_ALL);
+    echo "opened the debug info for console.." . PHP_EOL;
 } else {
     ini_set("display_errors", "Off");
     error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 }
 
-$funcName = $params['action'];
+//get action of cmd
+$count = count($argv);
+if ($argv[$count - 1] == '&') {
+    $funcName = $argv[$count - 2];
+} else {
+    $funcName = $argv[$count - 1];
+}
+
 switch ($funcName) {
     case 'start':
         {
             // 开启进程
-            echo 'start:' . 'st_' . $config['server']['server_name'] . PHP_EOL;
-            $server = new \WhetStone\Stone\Server($config);
+            echo 'start:' . $config['server']['server_name'] . PHP_EOL;
+            $server = new \WhetStone\Stone\Server\Manager($params, $config);
             $server->start();
             break;
         }
     case 'stop':
         {
             // 给 master 进程发送信号量 15
-            echo 'stop:' . 'st_' . $config['server']['server_name'] . PHP_EOL;
+            echo 'stop:' . $config['server']['server_name'] . PHP_EOL;
             $pid = file_get_contents($config['swoole']['pid_file']);
             if ($pid > 0) {
                 $ret = swoole_process::kill($pid);
@@ -115,7 +123,7 @@ switch ($funcName) {
     case 'reload':
         {
             // SIGUSR1
-            echo 'reload:' . 'st_' . $config['server']['server_name'] . PHP_EOL;
+            echo 'reload:' . $config['server']['server_name'] . PHP_EOL;
             $pid = file_get_contents($config['swoole']['pid_file']);
             if ($pid > 0) {
                 $cmd = "kill -s 10 $pid";
@@ -133,15 +141,15 @@ switch ($funcName) {
             // stop、start
             $pid = file_get_contents($config['swoole']['pid_file']);
 
-            echo 'stop:' . 'st_' . $config['server']['server_name'] . PHP_EOL;
+            echo 'stop:' . $config['server']['server_name'] . PHP_EOL;
             $cmd = "kill  $pid";
             exec($cmd, $outStr);
 
             sleep(3);
 
             //reload pid
-            echo 'start:' . 'st_' . $config['server']['server_name'] . PHP_EOL;
-            $server = new \WhetStone\Stone\Server($config);
+            echo 'start:' . $config['server']['server_name'] . PHP_EOL;
+            $server = new \WhetStone\Stone\Server\Manager($params, $config);
             $server->start();
 
             break;
@@ -149,10 +157,15 @@ switch ($funcName) {
     case 'kill':
         {
             //暴力kill
-            $name = 'st_' . $config['server']['server_name'];
-            echo 'kill:' . 'st_' . $config['server']['server_name'] . PHP_EOL;
+            $name = $config['server']['server_name'];
+            echo 'kill:' . $config['server']['server_name'] . PHP_EOL;
             $cmd = "ps -ef | grep $name | grep -v grep | cut -c 9-15 | xargs kill -s 9 ";
             exec($cmd, $outStr);
             break;
+        }
+    default:
+        {
+            help();
+            exit;
         }
 }
