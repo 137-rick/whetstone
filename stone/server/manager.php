@@ -2,6 +2,8 @@
 
 namespace WhetStone\Stone\Server;
 
+use WhetStone\Stone\Di;
+
 class Manager
 {
 
@@ -35,21 +37,46 @@ class Manager
         $server->set($this->config["swoole"]);
 
         //store server obj on di
-        \WhetStone\Stone\Di::set("server", $server);
+        Di::set("server", $server);
 
         //register base event of swoole
-        $baseRouter = new \WhetStone\Stone\Protocol\Base($server, $this->config);
-        \WhetStone\Stone\Di::set("base_protocol", $baseRouter);
+        $baseProtocol = new \WhetStone\Stone\Protocol\Base($server, $this->config);
+        Di::set("base_protocol", $baseProtocol);
 
         //register main protocol event
-        $routerClassName = $this->config["server"]["protocol"];
-        $router          = new $routerClassName($server, $this->config);
-        \WhetStone\Stone\Di::set("main_protocol", $router);
+        $protocolClassName = $this->config["server"]["protocol"];
+        $protocol          = new $protocolClassName($server, $this->config, 'Main');
+        Di::set("main_protocol", $protocol);
 
-        //bind listen
+        //bind port listen
+        foreach ($this->config["server"]["listen"] as $serverName => $listenConfig) {
+            $port = null;
 
+            if ($listenConfig["server"] == "websocket") {
+                $port = $server->addlistener($listenConfig["host"], $listenConfig["port"], SWOOLE_SOCK_TCP);
+
+            } elseif ($listenConfig["server"] == "http") {
+                $port = $server->addlistener($listenConfig["host"], $listenConfig["port"], SWOOLE_SOCK_TCP);
+            } elseif ($listenConfig["server"] == "tcp") {
+                $port = $server->addlistener($listenConfig["host"], $listenConfig["port"], SWOOLE_SOCK_TCP);
+            } elseif ($listenConfig["server"] == "udp") {
+                $port = $server->addlistener($listenConfig["host"], $listenConfig["port"], SWOOLE_SOCK_UDP);
+            }
+
+            Di::set("port_" . $serverName, $port);
+
+            $protocolClassName = $listenConfig["protocol"];
+            $protocol          = new $protocolClassName($port, $this->config, $serverName);
+            Di::set("port_protocol_" . $serverName, $protocol);
+
+            if (!empty($listenConfig["set"])) {
+                $port->set($listenConfig["set"]);
+            }
+
+        }
 
         //start server
         $server->start();
     }
+
 }

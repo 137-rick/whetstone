@@ -9,11 +9,15 @@ namespace WhetStone\Stone\Protocol;
  */
 class Websocket {
 
+    protected $_server;
+    protected $_config;
+    protected $_name;
 
-    public function __construct($server,$config)
+    public function __construct($server, $config, $name)
     {
         $this->_server = $server;
         $this->_config = $config;
+        $this->_name = $name;
 
         //sub listen event
         $this->_server->on('Request', array($this,"onRequest"));

@@ -8,18 +8,20 @@ return array(
 
         "server_name" => "wt_stone",
 
-        "host"        => "0.0.0.0",
-        "port"        => 9980,
+        "host" => "0.0.0.0",
+        "port" => 9980,
 
-        "logpath"     => '/home/logs/server',
+        "logpath" => '/home/logs/server',
 
         "listen" => array(
             "api" => array(
-                "host" => "0.0.0.0",
-                "port" => 6375,
-                "server" => 'tcp',
+                "host"     => "0.0.0.0",
+                "port"     => 6375,
+                "server"   => 'tcp',
                 "protocol" => 'WhetStone\Stone\Protocol\Tcp',
+                "set"      => array(
 
+                ),
             ),
         ),
     ),
@@ -55,11 +57,11 @@ return array(
         'request_slowlog_file'    => '/home/logs/server/stone_slow.log',
         'trace_event_worker'      => true,
 
-        'task_tmpdir'             => '/dev/shm/',
+        'task_tmpdir' => '/dev/shm/',
 
-        'pid_file'                => '/home/logs/server/stone.pid',
+        'pid_file' => '/home/logs/server/stone.pid',
 
-        'daemonize'               => 1,
+        'daemonize' => 1,
     ),
 
 );

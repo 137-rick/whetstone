@@ -8,12 +8,15 @@ namespace WhetStone\Stone\Protocol;
  * @package WhetStone\Stone\Protocol
  */
 class UDP {
+    protected $_server;
+    protected $_config;
+    protected $_name;
 
-
-    public function __construct($server,$config)
+    public function __construct($server, $config, $name)
     {
         $this->_server = $server;
         $this->_config = $config;
+        $this->_name = $name;
 
         //sub listen event
         $this->_server->on('packet', array($this,"onPacket"));
