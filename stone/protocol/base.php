@@ -34,7 +34,6 @@ class Base
         $this->_server->on('Task', array($this, 'onTask'));
         $this->_server->on('Finish', array($this, 'onFinish'));
 
-        $this->_server->on('Close', array($this, 'onClose'));
     }
 
     public function setProcessName($prefix, $typeName)
@@ -106,38 +105,6 @@ class Base
     }
 
     //////////////////////////////////////////////////// 后面都是协议注册 //后续删除
-
-    /**
-     * 新的连接回调事件--worker中
-     */
-    public function onConnect(\swoole_server $server, $fd, $from_id)
-    {
-
-    }
-
-    /**
-     * 收到数据时的回调,发生在worker中
-     */
-    public function onReceive(\swoole_server $server, $fd, $reactor_id, $data)
-    {
-
-    }
-
-    /**
-     * UDP数据回调
-     */
-    public function onPacket(\swoole_server $server, $data, $client_info)
-    {
-
-    }
-
-    /**
-     * TCP客户端连接关闭后，在worker进程中回调此函数
-     */
-    public function onClose(\swoole_server $server, $fd, $reactorId)
-    {
-
-    }
 
     /**
      * work中投递任务时发生的回调事件

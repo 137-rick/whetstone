@@ -3,11 +3,11 @@
 namespace WhetStone\Stone\Protocol;
 
 /**
- * websocket协议回调封装
- * Class Http
+ * udp协议回调封装
+ * Class udp
  * @package WhetStone\Stone\Protocol
  */
-class Udp {
+class UDP {
 
 
     public function __construct($server,$config)
@@ -17,7 +17,12 @@ class Udp {
 
         //sub listen event
         $this->_server->on('packet', array($this,"onPacket"));
-
+        $this->_server->set(array(
+            "open_http_protocol" => false,
+            "open_http2_protocol" => false,
+            "open_websocket_protocol" => false,
+            "open_mqtt_protocol" => false,
+        ));
     }
 
 

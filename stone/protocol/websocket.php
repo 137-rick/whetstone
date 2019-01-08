@@ -4,7 +4,7 @@ namespace WhetStone\Stone\Protocol;
 
 /**
  * websocket协议回调封装
- * Class Http
+ * Class Websocket
  * @package WhetStone\Stone\Protocol
  */
 class Websocket {
@@ -19,7 +19,12 @@ class Websocket {
         $this->_server->on('Request', array($this,"onRequest"));
         $this->_server->on('Open', array($this,"onOpen"));
         $this->_server->on('Message', array($this,"onMessage"));
-
+        $this->_server->set(array(
+            "open_http_protocol" => false,
+            "open_http2_protocol" => false,
+            "open_websocket_protocol" => true,
+            "open_mqtt_protocol" => false,
+        ));
     }
 
 

@@ -3,11 +3,11 @@
 namespace WhetStone\Stone\Protocol;
 
 /**
- * tcp协议回调封装
- * Class tcp
+ * Mqtt协议回调封装
+ * Class Mqtt
  * @package WhetStone\Stone\Protocol
  */
-class TCP {
+class MQTT {
 
 
     public function __construct($server,$config)
@@ -23,7 +23,7 @@ class TCP {
             "open_http_protocol" => false,
             "open_http2_protocol" => false,
             "open_websocket_protocol" => false,
-            "open_mqtt_protocol" => false,
+            "open_mqtt_protocol" => true,
         ));
     }
 

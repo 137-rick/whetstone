@@ -7,7 +7,7 @@ namespace WhetStone\Stone\Protocol;
  * Class Http
  * @package WhetStone\Stone\Protocol
  */
-class Http {
+class HTTP {
 
 
     public function __construct($server,$config)
@@ -17,6 +17,12 @@ class Http {
 
         //sub listen event
         $this->_server->on('Request', array($this,"onRequest"));
+        $this->_server->set(array(
+            "open_http_protocol" => true,
+            "open_http2_protocol" => false,
+            "open_websocket_protocol" => false,
+            "open_mqtt_protocol" => false,
+        ));
     }
 
     public function onRequest($request, $response){
