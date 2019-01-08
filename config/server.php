@@ -3,7 +3,7 @@
 return array(
     //主服务，选主服务 建议按 websocket（http） > http > udp || tcp 顺序创建 ,websocket只能作为主进程
     "server" => array(
-        "server"   => 'WhetStone\Stone\Server\Http',
+        "server"   => 'http',
         "protocol" => 'WhetStone\Stone\Protocol\Http',
 
         "server_name" => "wt_stone",
@@ -17,7 +17,8 @@ return array(
             "api" => array(
                 "host" => "0.0.0.0",
                 "port" => 6375,
-                "protocol" => 'WhetStone\Stone\Protocol\Http',
+                "server" => 'tcp',
+                "protocol" => 'WhetStone\Stone\Protocol\Tcp',
 
             ),
         ),

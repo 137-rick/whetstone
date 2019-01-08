@@ -3,11 +3,11 @@
 namespace WhetStone\Stone\Protocol;
 
 /**
- * Http协议回调封装
+ * websocket协议回调封装
  * Class Http
  * @package WhetStone\Stone\Protocol
  */
-class Http {
+class Udp {
 
 
     public function __construct($server,$config)
@@ -16,12 +16,18 @@ class Http {
         $this->_config = $config;
 
         //sub listen event
-        $this->_server->on('Request', array($this,"onRequest"));
-    }
-
-    public function onRequest($request, $response){
-        $response->end("yes");
+        $this->_server->on('packet', array($this,"onPacket"));
 
     }
+
+
+    /**
+     * UDP数据回调
+     */
+    public function onPacket(\swoole_server $server, $data, $client_info)
+    {
+
+    }
+
 
 }

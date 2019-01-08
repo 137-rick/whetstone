@@ -21,20 +21,20 @@ class Base
         $this->_config = $config;
 
         //main event
-        $this->_server->getServer()->on('Start', array($this, 'onStart'));
-        $this->_server->getServer()->on('Shutdown', array($this, 'onShutdown'));
+        $this->_server->on('Start', array($this, 'onStart'));
+        $this->_server->on('Shutdown', array($this, 'onShutdown'));
 
-        $this->_server->getServer()->on('WorkerStart', array($this, 'onWorkerStart'));
-        $this->_server->getServer()->on('WorkerError', array($this, 'onWorkerError'));
-        $this->_server->getServer()->on('WorkerStop', array($this, 'onWorkerStop'));
+        $this->_server->on('WorkerStart', array($this, 'onWorkerStart'));
+        $this->_server->on('WorkerError', array($this, 'onWorkerError'));
+        $this->_server->on('WorkerStop', array($this, 'onWorkerStop'));
 
-        $this->_server->getServer()->on('ManagerStart', array($this, 'onManagerStart'));
-        $this->_server->getServer()->on('ManagerStop', array($this, 'onManagerStop'));
+        $this->_server->on('ManagerStart', array($this, 'onManagerStart'));
+        $this->_server->on('ManagerStop', array($this, 'onManagerStop'));
 
-        $this->_server->getServer()->on('Task', array($this, 'onTask'));
-        $this->_server->getServer()->on('Finish', array($this, 'onFinish'));
+        $this->_server->on('Task', array($this, 'onTask'));
+        $this->_server->on('Finish', array($this, 'onFinish'));
 
-        $this->_server->getServer()->on('Close', array($this, 'onClose'));
+        $this->_server->on('Close', array($this, 'onClose'));
     }
 
     public function setProcessName($prefix, $typeName)
@@ -156,29 +156,5 @@ class Base
 
     }
 
-    /**
-     * http-server的接受一个连接的时的回调函数
-     */
-
-    public function onRequest($request, $response)
-    {
-
-    }
-
-    /**
-     * 当WebSocket客户端与服务器建立连接并完成握手后会回调此函数。
-     */
-    public function onOpen(\swoole_websocket_server $svr, swoole_http_request $req)
-    {
-
-    }
-
-    /**
-     * 当服务器收到来自客户端的数据帧时会回调此函数。
-     */
-    public function onMessage(\swoole_server $server, swoole_websocket_frame $frame)
-    {
-
-    }
 
 }
