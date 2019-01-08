@@ -49,6 +49,8 @@ return array(
         'task_max_request'        => 0,
         'discard_timeout_request' => false,
 
+        'document_root'           => STONE_ROOT."/webroot",
+
         //swoole 日志级别 Info
         'log_level'               => 2,
         'log_file'                => '/home/logs/server/stone.log',

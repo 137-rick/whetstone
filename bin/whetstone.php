@@ -19,7 +19,7 @@ function help()
     $helpDom .= "\t-c config.php\t set config file" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
-    $helpDom .= "\t-d\t\tdaemon mode. product mode" . PHP_EOL;
+    $helpDom .= "\t-d\t\tclose daemon mode. debug mode" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
     $helpDom .= "\t-v\t\tshow php debug info on console" . PHP_EOL;
@@ -90,6 +90,17 @@ if (isset($params['v'])) {
     error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 }
 
+//daemon mode default not
+if (isset($params["d"])) {
+    $config["swoole"]["daemonize"] = 0;
+}
+
+//pid file
+if (isset($params["p"])) {
+    $config["swoole"]["pid_file"] = $params["p"];
+}
+
+
 //get action of cmd
 $count = count($argv);
 if ($argv[$count - 1] == '&') {
@@ -143,8 +154,10 @@ switch ($funcName) {
             $pid = file_get_contents($config['swoole']['pid_file']);
 
             echo 'stop:' . $config['server']['server_name'] . " pid:". $pid . PHP_EOL;
-            $cmd = "kill  $pid";
-            exec($cmd, $outStr);
+            if($pid > 0){
+                $cmd = "kill  $pid";
+                exec($cmd, $outStr);
+            }
 
             sleep(3);
 

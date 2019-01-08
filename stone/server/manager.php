@@ -19,6 +19,9 @@ class Manager
 
     public function start()
     {
+        //open coroutine
+        \Swoole\Runtime::enableCoroutine(true);
+
         //register main server
         $serverType = strtolower($this->config["server"]["server"]);
         if ($serverType == "websocket") {
@@ -54,7 +57,6 @@ class Manager
 
             if ($listenConfig["server"] == "websocket") {
                 $port = $server->addlistener($listenConfig["host"], $listenConfig["port"], SWOOLE_SOCK_TCP);
-
             } elseif ($listenConfig["server"] == "http") {
                 $port = $server->addlistener($listenConfig["host"], $listenConfig["port"], SWOOLE_SOCK_TCP);
             } elseif ($listenConfig["server"] == "tcp") {
@@ -63,12 +65,15 @@ class Manager
                 $port = $server->addlistener($listenConfig["host"], $listenConfig["port"], SWOOLE_SOCK_UDP);
             }
 
+            //set the port obj
             Di::set("port_" . $serverName, $port);
 
+            //set protocol obj
             $protocolClassName = $listenConfig["protocol"];
             $protocol          = new $protocolClassName($port, $this->config, $serverName);
             Di::set("port_protocol_" . $serverName, $protocol);
 
+            //set the swoole user setting
             if (!empty($listenConfig["set"])) {
                 $port->set($listenConfig["set"]);
             }
