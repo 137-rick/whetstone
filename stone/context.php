@@ -62,6 +62,9 @@ class Context
             //创建context并且放到列表
             self::$_contextList[$cid] = new self();
 
+            //保存当前根pid到context
+            self::$_contextList[$cid]->set("co_pid", $cid);
+
             //初始化根协程id子协程序列表
             //理论上，子小协程还没结束
             //用这个做是否释放context依据
