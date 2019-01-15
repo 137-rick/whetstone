@@ -3,6 +3,7 @@
 namespace WhetStone\Stone;
 
 define('STONE_ROOT', dirname(__DIR__) . "/");
+ini_set('default_socket_timeout', 60);
 
 /**
  * 框架初始化类
@@ -77,12 +78,15 @@ class Application
         var_dump($e->getCode());
         var_dump($e->getTraceAsString());
         //}
+        Event::fire("exception", array(
+            "exception"  => $e,
+        ));
 
     }
 
     function ShutDownHandle()
     {
-
+        Event::fire("exit", array());
     }
 
 }

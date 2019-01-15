@@ -55,6 +55,7 @@ class Manager
         foreach ($this->config["server"]["listen"] as $serverName => $listenConfig) {
             $port = null;
 
+            //deny user define the main for listen name
             if(strtolower($serverName) == "Main"){
                 throw new \Exception("please don't set server name to Main for sub listen");
             }

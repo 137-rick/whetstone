@@ -16,7 +16,7 @@ class Base
     protected $_server = null;
     protected $_config = null;
 
-    public function __construct($server, $config)
+    public function __construct(\swoole_server $server, $config)
     {
 
         $this->_server = $server;
@@ -74,6 +74,7 @@ class Base
 
     /**
      * Server启动在主进程的主线程回调此函数
+     * @param \swoole_server $server
      */
     public function onStart(\swoole_server $server)
     {
@@ -85,6 +86,7 @@ class Base
 
     /**
      * server结束时回调事件
+     * @param \swoole_server $server
      */
     public function onShutdown(\swoole_server $server)
     {
@@ -93,8 +95,11 @@ class Base
         ));
     }
 
+
     /**
      * 事件在Worker进程/Task进程启动时发生
+     * @param \swoole_server $server
+     * @param $worker_id
      */
     public function onWorkerStart(\swoole_server $server, $worker_id)
     {
@@ -114,6 +119,11 @@ class Base
 
     /**
      * 当worker/task_worker进程发生异常后会在Manager进程内回调此函数。
+     * @param \swoole_server $server
+     * @param $worker_id
+     * @param $worker_pid
+     * @param $exit_code
+     * @param $signal
      */
     public function onWorkerError(\swoole_server $server, $worker_id, $worker_pid, $exit_code, $signal)
     {
@@ -128,6 +138,8 @@ class Base
 
     /**
      * 事件在Worker进程/Task进程终止时发生
+     * @param \swoole_server $server
+     * @param $worker_id
      */
     public function onWorkerStop(\swoole_server $server, $worker_id)
     {
@@ -139,6 +151,7 @@ class Base
 
     /**
      * 当管理进程启动时回调事件
+     * @param \swoole_server $server
      */
     public function onManagerStart(\swoole_server $server)
     {
@@ -151,6 +164,7 @@ class Base
 
     /**
      * 当管理进程结束时回调函数
+     * @param \swoole_server $server
      */
     public function onManagerStop(\swoole_server $server)
     {
@@ -161,6 +175,10 @@ class Base
 
     /**
      * work中投递任务时发生的回调事件
+     * @param \swoole_server $server
+     * @param $task_id
+     * @param $src_worker_id
+     * @param $data
      */
     public function onTask(\swoole_server $server, $task_id, $src_worker_id, $data)
     {
@@ -174,6 +192,9 @@ class Base
 
     /**
      * 当worker进程投递的任务在task_worker中完成时回调此函数
+     * @param \swoole_server $server
+     * @param $task_id
+     * @param $data
      */
     public function onFinish(\swoole_server $server, $task_id, $data)
     {

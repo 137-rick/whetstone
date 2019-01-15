@@ -9,7 +9,8 @@ use WhetStone\Stone\Server\Event;
  * Class tcpfixedheader
  * @package WhetStone\Stone\Protocol
  */
-class TCPFixedHeader {
+class TCPFixedHeader
+{
 
     protected $_server;
     protected $_config;
@@ -19,21 +20,30 @@ class TCPFixedHeader {
     {
         $this->_server = $server;
         $this->_config = $config;
-        $this->_name = $name;
+        $this->_name   = $name;
 
         //sub listen event
-        $this->_server->on('connect', array($this,"onConnect"));
-        $this->_server->on('receive', array($this,"onReceive"));
-        $this->_server->on('close', array($this,"onClose"));
+        $this->_server->on('connect', array(
+            $this,
+            "onConnect"
+        ));
+        $this->_server->on('receive', array(
+            $this,
+            "onReceive"
+        ));
+        $this->_server->on('close', array(
+            $this,
+            "onClose"
+        ));
         $this->_server->set(array(
-            "open_http_protocol" => false,
-            "open_http2_protocol" => false,
+            "open_http_protocol"      => false,
+            "open_http2_protocol"     => false,
             "open_websocket_protocol" => false,
-            "open_mqtt_protocol" => false,
-            'open_length_check' => true,
-            'package_length_type' => 'N',
-            'package_length_offset' => 0,
-            'package_body_offset' => 2,
+            "open_mqtt_protocol"      => false,
+            'open_length_check'       => true,
+            'package_length_type'     => 'N',
+            'package_length_offset'   => 0,
+            'package_body_offset'     => 2,
         ));
     }
 

@@ -9,7 +9,8 @@ use WhetStone\Stone\Server\Event;
  * Class udp
  * @package WhetStone\Stone\Protocol
  */
-class UDP {
+class UDP
+{
     protected $_server;
     protected $_config;
     protected $_name;
@@ -18,15 +19,18 @@ class UDP {
     {
         $this->_server = $server;
         $this->_config = $config;
-        $this->_name = $name;
+        $this->_name   = $name;
 
         //sub listen event
-        $this->_server->on('packet', array($this,"onPacket"));
+        $this->_server->on('packet', array(
+            $this,
+            "onPacket"
+        ));
         $this->_server->set(array(
-            "open_http_protocol" => false,
-            "open_http2_protocol" => false,
+            "open_http_protocol"      => false,
+            "open_http2_protocol"     => false,
             "open_websocket_protocol" => false,
-            "open_mqtt_protocol" => false,
+            "open_mqtt_protocol"      => false,
         ));
     }
 
@@ -37,9 +41,9 @@ class UDP {
     public function onPacket(\swoole_server $server, $data, $client_info)
     {
         Event::fire($this->_name . "_" . "packet", array(
-            "server"  => $server,
-            "from_id" => $client_info,
-            "data"    => $data,
+            "server"      => $server,
+            "client_info" => $client_info,
+            "data"        => $data,
         ));
     }
 
