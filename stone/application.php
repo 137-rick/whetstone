@@ -26,13 +26,13 @@ class Application
             require_once(STONE_ROOT . "/vendor/autoload.php");
         }
 
-        //exception will handle by framework
+        //default exception will handle by framework
         set_exception_handler(array(
             $this,
             "ExceptionHandle"
         ));
 
-        //worker shutdown will process
+        //worker shutdown will invoke for check if is wrong
         register_shutdown_function(array(
             $this,
             "ShutDownHandle"

@@ -2,6 +2,8 @@
 
 namespace WhetStone\Stone\Protocol;
 
+use WhetStone\Stone\Server\Event;
+
 /**
  * udp协议回调封装
  * Class udp
@@ -34,7 +36,11 @@ class UDP {
      */
     public function onPacket(\swoole_server $server, $data, $client_info)
     {
-
+        Event::fire($this->_name . "_" . "packet", array(
+            "server"  => $server,
+            "from_id" => $client_info,
+            "data"    => $data,
+        ));
     }
 
 

@@ -55,6 +55,10 @@ class Manager
         foreach ($this->config["server"]["listen"] as $serverName => $listenConfig) {
             $port = null;
 
+            if(strtolower($serverName) == "Main"){
+                throw new \Exception("please don't set server name to Main for sub listen");
+            }
+
             if ($listenConfig["server"] == "websocket") {
                 $port = $server->addlistener($listenConfig["host"], $listenConfig["port"], SWOOLE_SOCK_TCP);
             } elseif ($listenConfig["server"] == "http") {

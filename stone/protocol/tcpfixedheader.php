@@ -2,6 +2,8 @@
 
 namespace WhetStone\Stone\Protocol;
 
+use WhetStone\Stone\Server\Event;
+
 /**
  * tcp fixedheader协议回调封装
  * Class tcpfixedheader
@@ -41,7 +43,11 @@ class TCPFixedHeader {
      */
     public function onConnect(\swoole_server $server, $fd, $from_id)
     {
-
+        Event::fire($this->_name . "_" . "connect", array(
+            "server"  => $server,
+            "fd"      => $fd,
+            "from_id" => $from_id,
+        ));
     }
 
     /**
@@ -49,7 +55,12 @@ class TCPFixedHeader {
      */
     public function onReceive(\swoole_server $server, $fd, $reactor_id, $data)
     {
-
+        Event::fire($this->_name . "_" . "receive", array(
+            "server"  => $server,
+            "fd"      => $fd,
+            "from_id" => $reactor_id,
+            "data"    => $data,
+        ));
     }
 
 
@@ -58,7 +69,11 @@ class TCPFixedHeader {
      */
     public function onClose(\swoole_server $server, $fd, $reactorId)
     {
-
+        Event::fire($this->_name . "_" . "close", array(
+            "server"  => $server,
+            "fd"      => $fd,
+            "from_id" => $reactorId,
+        ));
     }
 
 

@@ -14,11 +14,14 @@ return array(
         "logpath" => '/home/logs/server',
 
         "listen" => array(
+            //服务标识，就是下标，禁止叫main
             "api" => array(
-                "host"     => "0.0.0.0",
-                "port"     => 6375,
                 "server"   => 'tcp',
                 "protocol" => 'WhetStone\Stone\Protocol\Tcp',
+
+                "host"     => "0.0.0.0",
+                "port"     => 6375,
+
                 "set"      => array(
 
                 ),
@@ -43,13 +46,12 @@ return array(
         'heartbeat_check_interval' => 60,
 
         'open_cpu_affinity'       => 1,
-        'worker_num'              => 50,
+        'worker_num'              => 4,
         'task_worker_num'         => 0,
         'max_request'             => 0,
         'task_max_request'        => 0,
         'discard_timeout_request' => false,
 
-        'document_root'           => STONE_ROOT."/webroot",
 
         //swoole 日志级别 Info
         'log_level'               => 2,

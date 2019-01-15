@@ -2,12 +2,15 @@
 
 namespace WhetStone\Stone\Protocol;
 
+use WhetStone\Stone\Server\Event;
+
 /**
  * Http协议回调封装
  * Class Http
  * @package WhetStone\Stone\Protocol
  */
-class HTTP {
+class HTTP
+{
 
     protected $_server;
     protected $_config;
@@ -17,21 +20,27 @@ class HTTP {
     {
         $this->_server = $server;
         $this->_config = $config;
-        $this->_name = $name;
+        $this->_name   = $name;
 
         //sub listen event
-        $this->_server->on('Request', array($this,"onRequest"));
+        $this->_server->on('Request', array(
+            $this,
+            "onRequest"
+        ));
         $this->_server->set(array(
-            "open_http_protocol" => true,
-            "open_http2_protocol" => false,
+            "open_http_protocol"      => true,
+            "open_http2_protocol"     => false,
             "open_websocket_protocol" => false,
-            "open_mqtt_protocol" => false,
+            "open_mqtt_protocol"      => false,
         ));
     }
 
-    public function onRequest($request, $response){
-        $response->end("yes");
-
+    public function onRequest($request, $response)
+    {
+        Event::fire($this->_name . "_" . "request", array(
+            "request" => $request,
+            "response" => $response,
+        ));
     }
 
 }
