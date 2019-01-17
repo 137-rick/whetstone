@@ -180,13 +180,13 @@ class Base
      * @param $src_worker_id
      * @param $data
      */
-    public function onTask(\swoole_server $server, $task_id, $src_worker_id, $data)
+    public function onTask(\swoole_server $server, \Swoole\Server\Task $task)
     {
         Event::fire("task", array(
             "server"    => $server,
-            "task_id"   => $task_id,
-            "worker_id" => $src_worker_id,
-            "data"      => $data,
+            "task_id"   => $task->id,
+            "worker_id" => $task->workerId,
+            "data"      => $task->data,
         ));
     }
 

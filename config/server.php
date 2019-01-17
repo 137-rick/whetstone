@@ -47,10 +47,11 @@ return array(
 
         'open_cpu_affinity'       => 1,
         'worker_num'              => 4,
-        'task_worker_num'         => 0,
+        'task_worker_num'         => 0,//task个数，目前默认0
         'max_request'             => 0,
         'task_max_request'        => 0,
         'discard_timeout_request' => false,
+        'task_enable_coroutine'   => true,
 
         'max_coroutine'           => 10000,
 

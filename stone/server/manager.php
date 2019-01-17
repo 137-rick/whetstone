@@ -11,6 +11,8 @@ class Manager
 
     private $params = null;
 
+    private $event = null;
+
     public function __construct($param, $config)
     {
         $this->params = $param;
@@ -21,6 +23,9 @@ class Manager
     {
         //open coroutine
         \Swoole\Runtime::enableCoroutine(true);
+
+        //invoke register event
+        $this->event = new \WhetStone\EventRegister();
 
         //register main server
         $serverType = strtolower($this->config["server"]["server"]);
