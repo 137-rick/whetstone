@@ -59,10 +59,6 @@ return array(
         'log_level'               => 2,
         'log_file'                => '/home/logs/server/stone.log',
 
-        'request_slowlog_timeout' => 3,
-        'request_slowlog_file'    => '/home/logs/server/stone_slow.log',
-        'trace_event_worker'      => true,
-
         'task_tmpdir' => '/dev/shm/',
 
         'pid_file' => '/home/logs/server/stone.pid',

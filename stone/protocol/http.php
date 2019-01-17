@@ -32,6 +32,8 @@ class HTTP
             "open_http2_protocol"     => false,
             "open_websocket_protocol" => false,
             "open_mqtt_protocol"      => false,
+            "http_compression"        => true,
+
         ));
     }
 

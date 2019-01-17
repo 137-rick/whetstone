@@ -6,4 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'WhetStone\\' => array('/'),
+    'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
 );

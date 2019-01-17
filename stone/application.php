@@ -16,11 +16,14 @@ class Application
     public function __construct()
     {
 
+        /*
+        // change autoload to composer
         //register the autoload
         spl_autoload_register(array(
             $this,
             "AutoLoadHandel"
         ));
+        */
 
         //require autoload for composer
         if (file_exists(STONE_ROOT . "/vendor/autoload.php")) {

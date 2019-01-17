@@ -9,7 +9,12 @@
       "email": "xcl_rockman@qq.com"
     }
   ],
+  "autoload": {
+    "psr-4": {
+      "WhetStone\\": "/"
+    }
+  },
   "require": {
-
+    "nikic/fast-route": "1.3.0"
   }
 }
