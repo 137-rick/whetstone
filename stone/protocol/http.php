@@ -43,8 +43,8 @@ class HTTP
 
         $context->setAll(
             array(
-                "request" => $request,
-                "response" => $response,
+                "request" => new \WhetStone\Stone\Protocol\Request\Http($request),
+                "response" => new \WhetStone\Stone\Protocol\Response\Http($response),
             )
         );
 
