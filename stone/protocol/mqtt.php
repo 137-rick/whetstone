@@ -49,11 +49,17 @@ class MQTT
      */
     public function onConnect(\swoole_server $server, $fd, $reactor_id)
     {
-        Event::fire($this->_name . "_" . "connect", array(
-            "server"  => $server,
-            "fd"      => $fd,
-            "from_id" => $reactor_id,
-        ));
+        $context = \WhetStone\Stone\Context::createContext();
+
+        $context->setAll(
+            array(
+                "server"  => $server,
+                "fd"      => $fd,
+                "from_id" => $reactor_id,
+            )
+        );
+
+        Event::fire($this->_name . "_" . "connect", $context);
     }
 
     /**
@@ -61,12 +67,18 @@ class MQTT
      */
     public function onReceive(\swoole_server $server, $fd, $reactor_id, $data)
     {
-        Event::fire($this->_name . "_" . "receive", array(
-            "server"  => $server,
-            "fd"      => $fd,
-            "from_id" => $reactor_id,
-            "data"    => $data,
-        ));
+        $context = \WhetStone\Stone\Context::createContext();
+
+        $context->setAll(
+            array(
+                "server"  => $server,
+                "fd"      => $fd,
+                "from_id" => $reactor_id,
+                "data"    => $data,
+            )
+        );
+
+        Event::fire($this->_name . "_" . "receive", $context);
     }
 
 
@@ -75,11 +87,17 @@ class MQTT
      */
     public function onClose(\swoole_server $server, $fd, $reactor_id)
     {
-        Event::fire($this->_name . "_" . "close", array(
-            "server"  => $server,
-            "fd"      => $fd,
-            "from_id" => $reactor_id,
-        ));
+        $context = \WhetStone\Stone\Context::createContext();
+
+        $context->setAll(
+            array(
+                "server"  => $server,
+                "fd"      => $fd,
+                "from_id" => $reactor_id,
+            )
+        );
+
+        Event::fire($this->_name . "_" . "close", $context);
     }
 
 

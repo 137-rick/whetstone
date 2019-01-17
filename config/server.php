@@ -52,6 +52,7 @@ return array(
         'task_max_request'        => 0,
         'discard_timeout_request' => false,
 
+        'max_coroutine'           => 10000,
 
         //swoole 日志级别 Info
         'log_level'               => 2,

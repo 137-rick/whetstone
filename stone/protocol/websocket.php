@@ -55,10 +55,16 @@ class Websocket
 
     public function onRequest($request, $response)
     {
-        Event::fire($this->_name . "_" . "request", array(
-            "request"  => $request,
-            "response" => $response,
-        ));
+        $context = \WhetStone\Stone\Context::createContext();
+
+        $context->setAll(
+            array(
+                "request" => $request,
+                "response" => $response,
+            )
+        );
+
+        Event::fire($this->_name . "_" . "request", $context);
     }
 
     /**
@@ -66,10 +72,16 @@ class Websocket
      */
     public function onOpen(\swoole_websocket_server $server, swoole_http_request $request)
     {
-        Event::fire($this->_name . "_" . "open", array(
-            "server"  => $server,
-            "request" => $request,
-        ));
+        $context = \WhetStone\Stone\Context::createContext();
+
+        $context->setAll(
+            array(
+                "server"  => $server,
+                "request" => $request,
+            )
+        );
+
+        Event::fire($this->_name . "_" . "open", $context);
     }
 
     /**
@@ -77,10 +89,16 @@ class Websocket
      */
     public function onMessage(\swoole_server $server, swoole_websocket_frame $frame)
     {
-        Event::fire($this->_name . "_" . "message", array(
-            "server" => $server,
-            "frame"  => $frame,
-        ));
+        $context = \WhetStone\Stone\Context::createContext();
+
+        $context->setAll(
+            array(
+                "server" => $server,
+                "frame"  => $frame,
+            )
+        );
+
+        Event::fire($this->_name . "_" . "message", $context);
     }
 
     /**
@@ -88,11 +106,17 @@ class Websocket
      */
     public function onClose(\swoole_server $server, $fd, $reactorId)
     {
-        Event::fire($this->_name . "_" . "close", array(
-            "server"  => $server,
-            "from_id" => $reactorId,
-            "fd"      => $fd,
-        ));
+        $context = \WhetStone\Stone\Context::createContext();
+
+        $context->setAll(
+            array(
+                "server"  => $server,
+                "from_id" => $reactorId,
+                "fd"      => $fd,
+            )
+        );
+
+        Event::fire($this->_name . "_" . "close", $context);
     }
 
 }

@@ -37,10 +37,16 @@ class HTTP
 
     public function onRequest($request, $response)
     {
-        Event::fire($this->_name . "_" . "request", array(
-            "request" => $request,
-            "response" => $response,
-        ));
+        $context = \WhetStone\Stone\Context::createContext();
+
+        $context->setAll(
+            array(
+                "request" => $request,
+                "response" => $response,
+            )
+        );
+
+        Event::fire($this->_name . "_" . "request", $context);
     }
 
 }

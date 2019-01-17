@@ -51,11 +51,17 @@ class TCPEOF
      */
     public function onConnect(\swoole_server $server, $fd, $from_id)
     {
-        Event::fire($this->_name . "_" . "connect", array(
-            "server"  => $server,
-            "fd"      => $fd,
-            "from_id" => $from_id,
-        ));
+        $context = \WhetStone\Stone\Context::createContext();
+
+        $context->setAll(
+            array(
+                "server"  => $server,
+                "fd"      => $fd,
+                "from_id" => $from_id,
+            )
+        );
+
+        Event::fire($this->_name . "_" . "connect", $context);
     }
 
     /**
@@ -63,25 +69,37 @@ class TCPEOF
      */
     public function onReceive(\swoole_server $server, $fd, $reactor_id, $data)
     {
-        Event::fire($this->_name . "_" . "receive", array(
-            "server"  => $server,
-            "fd"      => $fd,
-            "from_id" => $reactor_id,
-            "data"    => $data,
-        ));
+        $context = \WhetStone\Stone\Context::createContext();
+
+        $context->setAll(
+            array(
+                "server"  => $server,
+                "fd"      => $fd,
+                "from_id" => $reactor_id,
+                "data"    => $data,
+            )
+        );
+
+        Event::fire($this->_name . "_" . "receive", $context);
     }
 
 
     /**
      * TCP客户端连接关闭后，在worker进程中回调此函数
      */
-    public function onClose(\swoole_server $server, $fd, $reactorId)
+    public function onClose(\swoole_server $server, $fd, $reactor_id)
     {
-        Event::fire($this->_name . "_" . "close", array(
-            "server"  => $server,
-            "fd"      => $fd,
-            "from_id" => $reactorId,
-        ));
+        $context = \WhetStone\Stone\Context::createContext();
+
+        $context->setAll(
+            array(
+                "server"  => $server,
+                "fd"      => $fd,
+                "from_id" => $reactor_id,
+            )
+        );
+
+        Event::fire($this->_name . "_" . "close", $context);
     }
 
 
