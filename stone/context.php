@@ -63,7 +63,7 @@ class Context
             self::$_contextList[$cid] = new self();
 
             //保存当前根pid到context
-            self::$_contextList[$cid]->set("co_pid", $cid);
+            self::$_contextList[$cid]->setContextPid($cid);
 
             //初始化根协程id子协程序列表
             //理论上，子小协程还没结束
@@ -106,7 +106,7 @@ class Context
 
     /**
      * 获取当前协程Context
-     * @return mixed
+     * @return \WhetStone\Stone\Context
      * @throws \Exception
      */
     public static function getContext()
@@ -119,13 +119,12 @@ class Context
         //获取根pid
         $pid = self::getPid($cid);
         if ($pid == -1) {
-            return null;
+            throw new \Exception("没有找到根context cid", -335);
         }
 
         //没有父context返回null
         if (!isset(self::$_contextList[$pid])) {
-            //todo:这里输出错误日志
-            return null;
+            throw new \Exception("没有找到根context", -336);
         }
 
         //这里认为context已经创建了，直接返回
@@ -182,5 +181,13 @@ class Context
     public function getAll()
     {
         return $this->data;
+    }
+
+    public function setContextPid($cid){
+        $this->data["__co_pid"] = $cid;
+    }
+
+    public function getContextPid(){
+        return $this->data["__co_pid"];
     }
 }
