@@ -10,9 +10,14 @@ class Http
      */
     private $request = null;
 
+    private $request_uri = null;
+
+    private $request_uri_param = array();
+
     public function __construct(\Swoole\Http\Request $request)
     {
         $this->request = $request;
+        $this->request_uri = $this->getServer("request_uri");
     }
 
     /**
@@ -49,6 +54,38 @@ class Http
         }
 
         return $this->request->server[$name];
+    }
+
+    /**
+     * 设置url中带的参数信息
+     * @param array $param
+     */
+    public function setRequestUrlParam(array $param){
+        $this->request_uri_param = $param;
+    }
+
+    /**
+     * 获取网址内所带参数
+     * @return array
+     */
+    public function getRequestUrlParam(){
+        return $this->request_uri_param;
+    }
+
+    /**
+     * 获取请求域名后路径如URi
+     * @return string
+     */
+    public function getUri(){
+        return $this->getServer("request_uri");
+    }
+
+    /**
+     * 请求method获取，如post get
+     * @return string
+     */
+    public function getMethod(){
+        return $this->getServer("request_method");
     }
 
     /**

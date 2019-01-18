@@ -14,7 +14,7 @@ class Config
 
     public static function loadAllConfig()
     {
-        $configPath = dirname(dirname(__DIR__)) . "/config/";
+        $configPath = dirname(__DIR__) . "/config/";
         $fileList   = glob($configPath . "*.php");
 
         foreach ($fileList as $file) {
@@ -25,10 +25,13 @@ class Config
 
     public static function loadConfig($name)
     {
-        $configPath = dirname(dirname(__DIR__)) . "/config/";
+        $configPath = dirname(__DIR__) . "/config/";
+
         if (file_exists($configPath . $name . ".php")) {
             self::$config[$name] = include($configPath . $name . ".php");
+            return;
         }
+
         throw new \Exception("load Config was not found", -118);
     }
 

@@ -8,4 +8,9 @@ class Test extends \WhetStone\Stone\Controller
     {
         var_dump(123);
     }
+
+    public function test()
+    {
+        var_dump('test');
+    }
 }

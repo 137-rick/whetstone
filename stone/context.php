@@ -24,6 +24,9 @@ class Context
     //context 里面存储的数据
     private $data = array();
 
+    //根协程cid
+    private $pid = -1;
+
     public function __construct()
     {
 
@@ -101,7 +104,7 @@ class Context
     public static function delContext($cid)
     {
 
-        //todo:这里还没有处理$_parentIdChildren呢
+        //todo:这里还没有处理$_parentIdChildren呢，直接释放暴力了一点
         //根context 那么直接从数组中干掉
         //子协程如果还在用这个context没有关系,引用计数会好点吧
         if (self::$_parentIdMap[$cid] == $cid) {
@@ -141,7 +144,6 @@ class Context
         }
 
         //这里认为context已经创建了，直接返回
-
         //根据父id获取context，然后传递过去
         return self::$_contextList[$pid];
 
@@ -171,6 +173,10 @@ class Context
         $this->data[$key] = $val;
     }
 
+    /**
+     * 清空，然后覆盖掉所有变量
+     * @param $param
+     */
     public function setAll($param)
     {
         $this->data = $param;
@@ -184,27 +190,44 @@ class Context
         return null;
     }
 
+    /**
+     * 获取所有暂存变量
+     * @return array
+     */
     public function getAll()
     {
         return $this->data;
     }
 
+    /**
+     * 修改记录根协程cid
+     * @param $cid
+     */
     public function setContextPid($cid)
     {
-        $this->data["__co_pid"] = $cid;
+        $this->pid = $cid;
     }
 
+    /**
+     * 获取当前协程-根协程cid
+     * @return mixed
+     */
     public function getContextPid()
     {
-        return $this->data["__co_pid"];
+        return $this->pid;
     }
 
-    public function getStastics(){
+    /**
+     * 用于查看context暂存数据多大
+     * @return array
+     */
+    public function getStastics()
+    {
         return array(
             "context_count" => count(self::$_contextList),
-            "parent_id" => count(self::$_parentIdMap),
-            "children_id" => count(self::$_parentIdChildren),
-            "data" => count($this->data),
+            "parent_id"     => count(self::$_parentIdMap),
+            "children_id"   => count(self::$_parentIdChildren),
+            "data"          => count($this->data),
         );
     }
 }
