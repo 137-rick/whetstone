@@ -19,9 +19,18 @@ class EventRegister
         //on worker start init some event
         \WhetStone\Stone\Server\Event::register("Main_request", function () {
 
-            $context = \WhetStone\Stone\Context::getContext();
-            $response = $context->get("response");
-            $response->end("123");
+
+            try{
+                $context = \WhetStone\Stone\Context::getContext();
+                $response = $context->get("response");
+                $response->end("123");
+                if(mt_rand(0,100000) == 1){
+                    var_dump($context->getStastics());
+                }
+            }catch (\Throwable $e){
+
+            }
+
 
         });
     }

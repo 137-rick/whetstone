@@ -47,6 +47,8 @@ class Application
 
     /**
      * autoload process
+     * 已经停用了，使用composer autoload
+     * 留这里是未来使用的
      * @param $className
      * @throws \Exception
      */

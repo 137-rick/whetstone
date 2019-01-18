@@ -2,6 +2,12 @@
 
 namespace WhetStone\Stone;
 
+/**
+ * context类，协程版本不允许使用global
+ * 使用这个替代
+ * Class Context
+ * @package WhetStone\Stone
+ */
 class Context
 {
     ///////全局context管理//////////////
@@ -14,6 +20,8 @@ class Context
 
     //父类context使用列表
     private static $_parentIdChildren = array();
+
+    //context 里面存储的数据
     private $data = array();
 
     public function __construct()
@@ -99,6 +107,7 @@ class Context
         if (self::$_parentIdMap[$cid] == $cid) {
             unset(self::$_parentIdMap[$cid]);
             unset(self::$_contextList[$cid]);
+            unset(self::$_parentIdChildren[$cid]);
             return;
         }
 
@@ -188,5 +197,14 @@ class Context
     public function getContextPid()
     {
         return $this->data["__co_pid"];
+    }
+
+    public function getStastics(){
+        return array(
+            "context_count" => count(self::$_contextList),
+            "parent_id" => count(self::$_parentIdMap),
+            "children_id" => count(self::$_parentIdChildren),
+            "data" => count($this->data),
+        );
     }
 }

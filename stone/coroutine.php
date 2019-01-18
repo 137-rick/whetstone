@@ -2,6 +2,12 @@
 
 namespace WhetStone\Stone;
 
+/**
+ * 协程go封装
+ * 不要直接调用go，会导致context无法正常工作
+ * Class Coroutine
+ * @package WhetStone\Stone
+ */
 class Coroutine
 {
 
@@ -13,8 +19,15 @@ class Coroutine
 
         go(function () use ($pid, $callback, $argument) {
             //todo:exception must try
-            Context::createContext($pid);
-            $callback(...$argument);
+            $context = Context::createContext($pid);
+
+            try {
+                $callback(...$argument);
+            }catch (\Swoole\ExitException $e){
+                //do nothing
+            }catch (\Throwable $e){
+
+            }
         });
     }
 }
