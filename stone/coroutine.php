@@ -11,6 +11,12 @@ namespace WhetStone\Stone;
 class Coroutine
 {
 
+    /**
+     * 创建协程
+     * @param callable $callback 要注册的回调函数，如果有use传入之前准备好
+     * @param array ...$argument 回调函数参数
+     * @throws \Exception
+     */
     public static function create($callback, ...$argument)
     {
         //get context
@@ -26,7 +32,7 @@ class Coroutine
             }catch (\Swoole\ExitException $e){
                 //do nothing
             }catch (\Throwable $e){
-
+                //todo:这里没有处理啊
             }
         });
     }

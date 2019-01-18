@@ -19,6 +19,10 @@ class Manager
         $this->config = $config;
     }
 
+    /**
+     * 根据config/server.php服务启动对应端口，协议
+     * @throws \Exception
+     */
     public function start()
     {
         //open coroutine

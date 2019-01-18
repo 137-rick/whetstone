@@ -19,6 +19,9 @@ class Base
     public function __construct(\swoole_server $server, $config)
     {
 
+        /**
+         * @var \swoole_server
+         */
         $this->_server = $server;
         $this->_config = $config;
 

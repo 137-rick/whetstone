@@ -77,6 +77,10 @@ class Application
 
     }
 
+    /**
+     * 统一未拦截exception处理
+     * @param $e
+     */
     function ExceptionHandle($e)
     {
         //if(php_sapi_name() == "cli"){
@@ -91,6 +95,9 @@ class Application
 
     }
 
+    /**
+     * 服务关闭时清理
+     */
     function ShutDownHandle()
     {
         Event::fire("exit", array());

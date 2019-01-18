@@ -2,13 +2,23 @@
 
 namespace WhetStone;
 
+/**
+ * 这里是一个demo
+ * 利用event注册功能，我们可以在事件产生时触发用户自定义回调
+ * 这里就是一个简单的http router调用回调注册样例
+ *
+ * Class EventRegister
+ * @package WhetStone
+ */
 class EventRegister
 {
 
     public function __construct()
     {
 
-        //on worker start init some event
+        //worker刚启动时都加载那些内容
+        //放在这里是为了未来reload使用
+
         \WhetStone\Stone\Server\Event::register("worker_start", function () {
 
             //load all config
@@ -20,25 +30,39 @@ class EventRegister
         });
 
         //on worker start init some event
+        //Main 是主服务别名，下划线后是事件名，具体事件名可以在protocol下参考event的fire函数
+        //公用事件请参考stone\server\event内注释
+
         \WhetStone\Stone\Server\Event::register("Main_request", function () {
 
-            try{
-                $router = \WhetStone\Stone\Di::get("router");
+            try {
                 $context = \WhetStone\Stone\Context::getContext();
 
+                //获取请求信息
                 $request = $context->get("request");
-                $response = $context->get("response");
+                $method  = $request->getMethod();
+                $uri     = $request->getUri();
 
-                $method = $request->getMethod();
-                $uri = $request->getUri();
+                //拿到已经初始化成功的router
+                //根据router规则找到对应的控制器配置(handle)来自于conf/router.php
+                $router = \WhetStone\Stone\Di::get("router");
 
+                //查找并执行router.php内的handle
+                //返回结果只有两种情况，一种直接返回，一种是异常
+                //返回格式由controller决定
                 $result = $router->dispatch($method, $uri);
 
+                //获取response对象
+                $response = $context->get("response");
+                //返回结果
                 $response->end($result);
 
-            }catch (\Throwable $e){
-                //todo:这里如何返回接口结果
-                var_dump($e->getMessage(),$e->getTraceAsString());
+            } catch (\Exception $e) {
+                //todo:错误处理怎么搞
+                var_dump($e->getMessage(), $e->getTraceAsString());
+            } catch (\Throwable $e) {
+                //todo:错误处理怎么搞
+                var_dump($e->getMessage(), $e->getTraceAsString());
             }
 
 

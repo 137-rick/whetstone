@@ -2,6 +2,11 @@
 
 namespace WhetStone\Stone\Protocol\Response;
 
+/**
+ * Http协议返回结果封装
+ * Class Http
+ * @package WhetStone\Stone\Protocol\Response
+ */
 class Http
 {
 

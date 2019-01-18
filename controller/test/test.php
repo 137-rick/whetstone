@@ -1,16 +1,16 @@
 <?php
-namespace \WhetStone\Controller\Test;
+namespace WhetStone\Controller\Test;
 
 class Test extends \WhetStone\Stone\Controller
 {
 
     public function index()
     {
-        var_dump(123);
+        return $this->showJson("success",0);
     }
 
-    public function test()
+    public function info()
     {
-        var_dump('test');
+        return $this->showJson("nothing to do",-123);
     }
 }

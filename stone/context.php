@@ -101,6 +101,10 @@ class Context
         throw new \Exception("创建context失败", -322);
     }
 
+    /**
+     * 清理指定cid的context
+     * @param $cid
+     */
     public static function delContext($cid)
     {
 
@@ -168,6 +172,11 @@ class Context
         return -1;
     }
 
+    /**
+     * 设置context附加信息
+     * @param $key
+     * @param $val
+     */
     public function set($key, $val)
     {
         $this->data[$key] = $val;
@@ -182,6 +191,11 @@ class Context
         $this->data = $param;
     }
 
+    /**
+     * 获取附加信息
+     * @param $key
+     * @return mixed|null
+     */
     public function get($key)
     {
         if (isset($this->data[$key])) {

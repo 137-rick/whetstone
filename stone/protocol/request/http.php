@@ -2,6 +2,11 @@
 
 namespace WhetStone\Stone\Protocol\Request;
 
+/**
+ * Http协议请求对象封装
+ * Class Http
+ * @package WhetStone\Stone\Protocol\Request
+ */
 class Http
 {
 
