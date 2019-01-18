@@ -42,13 +42,11 @@ class UDP
     {
         $context = \WhetStone\Stone\Context::createContext();
 
-        $context->setAll(
-            array(
+        $context->setAll(array(
                 "server"      => $server,
                 "client_info" => $client_info,
                 "data"        => $data,
-            )
-        );
+            ));
 
         Event::fire($this->_name . "_" . "packet", $context);
     }

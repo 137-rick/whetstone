@@ -53,13 +53,11 @@ class TCPEOF
     {
         $context = \WhetStone\Stone\Context::createContext();
 
-        $context->setAll(
-            array(
+        $context->setAll(array(
                 "server"  => $server,
                 "fd"      => $fd,
                 "from_id" => $from_id,
-            )
-        );
+            ));
 
         Event::fire($this->_name . "_" . "connect", $context);
     }
@@ -71,14 +69,12 @@ class TCPEOF
     {
         $context = \WhetStone\Stone\Context::createContext();
 
-        $context->setAll(
-            array(
+        $context->setAll(array(
                 "server"  => $server,
                 "fd"      => $fd,
                 "from_id" => $reactor_id,
                 "data"    => $data,
-            )
-        );
+            ));
 
         Event::fire($this->_name . "_" . "receive", $context);
     }
@@ -91,13 +87,11 @@ class TCPEOF
     {
         $context = \WhetStone\Stone\Context::createContext();
 
-        $context->setAll(
-            array(
+        $context->setAll(array(
                 "server"  => $server,
                 "fd"      => $fd,
                 "from_id" => $reactor_id,
-            )
-        );
+            ));
 
         Event::fire($this->_name . "_" . "close", $context);
     }

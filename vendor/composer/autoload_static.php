@@ -24,7 +24,7 @@ class ComposerStaticInit9357dbcef28ac55f1484322894876918
     public static $prefixDirsPsr4 = array (
         'WhetStone\\' => 
         array (
-            0 => '/',
+            0 => __DIR__ . '/../..' . '/',
         ),
         'FastRoute\\' => 
         array (

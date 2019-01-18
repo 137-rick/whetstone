@@ -14,24 +14,11 @@ class Context
 
     //父类context使用列表
     private static $_parentIdChildren = array();
+    private $data = array();
 
-    /**
-     * 获取根协程id
-     * @param int $cid 当前协程号
-     * @return int|mixed 没有返回-1
-     * @throws \Exception 错误参数返回
-     */
-    public static function getPid($cid)
+    public function __construct()
     {
-        if ($cid == -1) {
-            throw new \Exception("传入非协程id", -333);
-        }
 
-        if (isset(self::$_parentIdMap[$cid])) {
-            return self::$_parentIdMap[$cid];
-        }
-
-        return -1;
     }
 
     /**
@@ -42,7 +29,7 @@ class Context
      */
     public static function createContext($parentCid = -1)
     {
-        $cid = \Swoole\Coroutine::getCid();
+        $cid = \Swoole\Coroutine::getUid();
         if ($cid == -1) {
             throw new \Exception("传入非协程id", -332);
         }
@@ -71,7 +58,7 @@ class Context
             self::$_parentIdChildren[$cid] = array($cid);
 
             //协程退出，清理痕迹
-            defer(function () use ($cid) {
+            \Swoole\Coroutine::defer(function () use ($cid) {
                 self::delContext($cid);
             });
 
@@ -79,8 +66,7 @@ class Context
         }
 
         //但根协程存在，当前子协程
-        if ($parentCid != $cid
-            && isset(self::$_contextList[$parentCid])) {
+        if ($parentCid != $cid && isset(self::$_contextList[$parentCid])) {
 
             //记录父映射关系
             self::$_parentIdMap[$cid] = $parentCid;
@@ -93,7 +79,7 @@ class Context
             //不创建context
 
             //当前协程退出，清理痕迹
-            defer(function () use ($cid) {
+            \Swoole\Coroutine::defer(function () use ($cid) {
                 self::delContext($cid);
             });
             return self::$_contextList[$parentCid];
@@ -104,6 +90,24 @@ class Context
         throw new \Exception("创建context失败", -322);
     }
 
+    public static function delContext($cid)
+    {
+
+        //todo:这里还没有处理$_parentIdChildren呢
+        //根context 那么直接从数组中干掉
+        //子协程如果还在用这个context没有关系,引用计数会好点吧
+        if (self::$_parentIdMap[$cid] == $cid) {
+            unset(self::$_parentIdMap[$cid]);
+            unset(self::$_contextList[$cid]);
+            return;
+        }
+
+        //非根协程，只能干掉父映射
+        unset(self::$_parentIdMap[$cid]);
+    }
+
+    /////////////单个context管理///////////////
+
     /**
      * 获取当前协程Context
      * @return \WhetStone\Stone\Context
@@ -111,7 +115,7 @@ class Context
      */
     public static function getContext()
     {
-        $cid = \Swoole\Coroutine::getCid();
+        $cid = \Swoole\Coroutine::getUid();
         if ($cid == -1) {
             throw new \Exception("当前在非协程状态", -334);
         }
@@ -134,30 +138,23 @@ class Context
 
     }
 
-    public static function delContext($cid)
+    /**
+     * 获取根协程id
+     * @param int $cid 当前协程号
+     * @return int|mixed 没有返回-1
+     * @throws \Exception 错误参数返回
+     */
+    public static function getPid($cid)
     {
-
-        //todo:这里还没有处理$_parentIdChildren呢
-        //根context 那么直接从数组中干掉
-        //子协程如果还在用这个context没有关系,引用计数会好点吧
-        if (self::$_parentIdMap[$cid] == $cid) {
-            unset(self::$_parentIdMap[$cid]);
-            unset(self::$_contextList[$cid]);
-            return;
+        if ($cid == -1) {
+            throw new \Exception("传入非协程id", -333);
         }
 
-        //非根协程，只能干掉父映射
-        unset(self::$_parentIdMap[$cid]);
-    }
+        if (isset(self::$_parentIdMap[$cid])) {
+            return self::$_parentIdMap[$cid];
+        }
 
-    /////////////单个context管理///////////////
-
-
-    private $data = array();
-
-    public function __construct()
-    {
-
+        return -1;
     }
 
     public function set($key, $val)
@@ -183,11 +180,13 @@ class Context
         return $this->data;
     }
 
-    public function setContextPid($cid){
+    public function setContextPid($cid)
+    {
         $this->data["__co_pid"] = $cid;
     }
 
-    public function getContextPid(){
+    public function getContextPid()
+    {
         return $this->data["__co_pid"];
     }
 }

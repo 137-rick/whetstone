@@ -44,7 +44,7 @@ class Event
     public static function fire($event, $param)
     {
         if (isset(self::$_eventList[$event])) {
-            foreach (self::$_eventList[$event] as $func){
+            foreach (self::$_eventList[$event] as $func) {
                 $func($param);
             }
         }

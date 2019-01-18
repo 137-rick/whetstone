@@ -4,10 +4,10 @@ namespace WhetStone\Stone;
 
 /**
  * 所有业务配置都在这里管理
- * Class ConfigManager
+ * Class Config
  * @package WhetStone\Stone
  */
-class ConfigManager
+class Config
 {
 
     private static $config = array();
@@ -15,7 +15,7 @@ class ConfigManager
     public static function loadAllConfig()
     {
         $configPath = dirname(dirname(__DIR__)) . "/config/";
-        $fileList = glob($configPath . "*.php");
+        $fileList   = glob($configPath . "*.php");
 
         foreach ($fileList as $file) {
             $fileName = basename($file, ".php");

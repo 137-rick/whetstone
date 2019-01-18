@@ -9,7 +9,7 @@ class Coroutine
     {
         //get context
         $context = Context::getContext();
-        $pid = $context->getContextPid();
+        $pid     = $context->getContextPid();
 
         go(function () use ($pid, $callback, $argument) {
             //todo:exception must try

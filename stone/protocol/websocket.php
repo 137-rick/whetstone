@@ -57,12 +57,10 @@ class Websocket
     {
         $context = \WhetStone\Stone\Context::createContext();
 
-        $context->setAll(
-            array(
-                "request" => $request,
+        $context->setAll(array(
+                "request"  => $request,
                 "response" => $response,
-            )
-        );
+            ));
 
         Event::fire($this->_name . "_" . "request", $context);
     }
@@ -74,12 +72,10 @@ class Websocket
     {
         $context = \WhetStone\Stone\Context::createContext();
 
-        $context->setAll(
-            array(
+        $context->setAll(array(
                 "server"  => $server,
                 "request" => $request,
-            )
-        );
+            ));
 
         Event::fire($this->_name . "_" . "open", $context);
     }
@@ -91,12 +87,10 @@ class Websocket
     {
         $context = \WhetStone\Stone\Context::createContext();
 
-        $context->setAll(
-            array(
+        $context->setAll(array(
                 "server" => $server,
                 "frame"  => $frame,
-            )
-        );
+            ));
 
         Event::fire($this->_name . "_" . "message", $context);
     }
@@ -108,13 +102,11 @@ class Websocket
     {
         $context = \WhetStone\Stone\Context::createContext();
 
-        $context->setAll(
-            array(
+        $context->setAll(array(
                 "server"  => $server,
                 "from_id" => $reactorId,
                 "fd"      => $fd,
-            )
-        );
+            ));
 
         Event::fire($this->_name . "_" . "close", $context);
     }

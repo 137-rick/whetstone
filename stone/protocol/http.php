@@ -41,12 +41,10 @@ class HTTP
     {
         $context = \WhetStone\Stone\Context::createContext();
 
-        $context->setAll(
-            array(
-                "request" => new \WhetStone\Stone\Protocol\Request\Http($request),
+        $context->setAll(array(
+                "request"  => new \WhetStone\Stone\Protocol\Request\Http($request),
                 "response" => new \WhetStone\Stone\Protocol\Response\Http($response),
-            )
-        );
+            ));
 
         Event::fire($this->_name . "_" . "request", $context);
     }

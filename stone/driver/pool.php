@@ -27,12 +27,6 @@ abstract class Pool
     /////////////////////////////////////////////////////
     //获取对象，对象必须自带重连
 
-    abstract public function getDriverObj();
-
-    //对象报错时会调用这个函数整理错误
-    abstract public function onError($obj, $e);
-    /////////////////////////////////////////////////////
-
     /**
      * Fend_Pool constructor.
      * @param int $maxObjCount 最大连接数
@@ -54,61 +48,7 @@ abstract class Pool
         */
     }
 
-
-    /*
-    private function heartBeat()
-    {
-
-        //min count of connection
-        for ($addCount = $this->_minObjCount - ($this->_invokeObjCount + $this->_pool->length()); $addCount > 0; $addCount--) {
-
-            //make sure queue nerver jam
-            if ($this->_pool->isFull()) {
-                break;
-            }
-
-            //create obj and add to channel
-            //if create fail throw exception
-            $this->_pool->push($this->getDriverObj());
-        }
-
-    }*/
-
-    private function fetchObj()
-    {
-        //pool is empty and have idle space
-        if ($this->_pool->isEmpty() && $this->_invokeObjCount < $this->_maxObjCount) {
-            $obj = $this->getDriverObj();
-            $this->_invokeObjCount++;
-            return $obj;
-        }
-
-        //channel have obj
-        //fetch obj by 3 second wait
-        $obj = $this->_pool->pop(3.0);
-
-        if ($obj !== FALSE) {
-            //increase count
-            $this->_invokeObjCount++;
-            return $obj;
-        }
-
-        //fetch fail
-        throw new \Exception("fetch pool obj fail... please increase the connection pool size.", -123);
-    }
-
-    private function recycleObj($obj): bool
-    {
-        if (empty($obj)) {
-            return;
-        }
-
-        //decrease count
-        $this->_invokeObjCount--;
-
-        return $this->_pool->push($obj);
-    }
-
+    //对象报错时会调用这个函数整理错误
 
     /**
      * 对象调用操作
@@ -137,6 +77,66 @@ abstract class Pool
             throw $e;
         }
     }
+    /////////////////////////////////////////////////////
+
+    private function fetchObj()
+    {
+        //pool is empty and have idle space
+        if ($this->_pool->isEmpty() && $this->_invokeObjCount < $this->_maxObjCount) {
+            $obj = $this->getDriverObj();
+            $this->_invokeObjCount++;
+            return $obj;
+        }
+
+        //channel have obj
+        //fetch obj by 3 second wait
+        $obj = $this->_pool->pop(3.0);
+
+        if ($obj !== FALSE) {
+            //increase count
+            $this->_invokeObjCount++;
+            return $obj;
+        }
+
+        //fetch fail
+        throw new \Exception("fetch pool obj fail... please increase the connection pool size.", -123);
+    }
+
+
+    /*
+    private function heartBeat()
+    {
+
+        //min count of connection
+        for ($addCount = $this->_minObjCount - ($this->_invokeObjCount + $this->_pool->length()); $addCount > 0; $addCount--) {
+
+            //make sure queue nerver jam
+            if ($this->_pool->isFull()) {
+                break;
+            }
+
+            //create obj and add to channel
+            //if create fail throw exception
+            $this->_pool->push($this->getDriverObj());
+        }
+
+    }*/
+
+    abstract public function getDriverObj();
+
+    private function recycleObj($obj): bool
+    {
+        if (empty($obj)) {
+            return;
+        }
+
+        //decrease count
+        $this->_invokeObjCount--;
+
+        return $this->_pool->push($obj);
+    }
+
+    abstract public function onError($obj, $e);
 
 
 }

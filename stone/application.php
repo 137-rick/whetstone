@@ -2,6 +2,8 @@
 
 namespace WhetStone\Stone;
 
+use WhetStone\Stone\Server\Event;
+
 define('STONE_ROOT', dirname(__DIR__) . "/");
 ini_set('default_socket_timeout', 60);
 
@@ -53,12 +55,12 @@ class Application
         //只接受小写文件路径
         $className = strtolower($className);
 
-        $className = str_replace("\\","/",$className);
+        $className = str_replace("\\", "/", $className);
         $classPath = trim($className, "/") . ".php";
 
         //去掉根路径
-        if(stripos($classPath,"whetstone/") === 0){
-            $classPath = substr($classPath,9);
+        if (stripos($classPath, "whetstone/") === 0) {
+            $classPath = substr($classPath, 9);
         }
 
         $classPath = STONE_ROOT . $classPath;
@@ -82,7 +84,7 @@ class Application
         var_dump($e->getTraceAsString());
         //}
         Event::fire("exception", array(
-            "exception"  => $e,
+            "exception" => $e,
         ));
 
     }

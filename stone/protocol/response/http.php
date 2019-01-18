@@ -48,8 +48,7 @@ class Http
      * @param bool $httponly
      * @return mixed
      */
-    public function setCookie(string $key, string $value = '', int $expire = 0, string $path = '/',
-                              string $domain = '', bool $secure = false, bool $httponly = false)
+    public function setCookie(string $key, string $value = '', int $expire = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false)
     {
         return $this->response->cookie($key, $value, $expire, $path, $domain, $secure, $httponly);
     }
@@ -104,7 +103,8 @@ class Http
      * @param string $data
      * @return mixed
      */
-    public function end(string $data){
+    public function end(string $data)
+    {
         return $this->response->end($data);
     }
 

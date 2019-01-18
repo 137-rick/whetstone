@@ -65,13 +65,6 @@ class Base
 
     }
 
-    public function setProcessName($prefix, $typeName)
-    {
-        if (empty($_SERVER['SSH_AUTH_SOCK']) || stripos($_SERVER['SSH_AUTH_SOCK'], 'apple') === false) {
-            \swoole_set_process_name($prefix . ":" . $typeName);
-        }
-    }
-
     /**
      * Server启动在主进程的主线程回调此函数
      * @param \swoole_server $server
@@ -82,6 +75,13 @@ class Base
         Event::fire("server_start", array(
             "server" => $server
         ));
+    }
+
+    public function setProcessName($prefix, $typeName)
+    {
+        if (empty($_SERVER['SSH_AUTH_SOCK']) || stripos($_SERVER['SSH_AUTH_SOCK'], 'apple') === false) {
+            \swoole_set_process_name($prefix . ":" . $typeName);
+        }
     }
 
     /**

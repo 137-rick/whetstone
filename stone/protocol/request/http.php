@@ -2,7 +2,8 @@
 
 namespace WhetStone\Stone\Protocol\Request;
 
-class Http{
+class Http
+{
 
     /**
      * @var \Swoole\Http\Request

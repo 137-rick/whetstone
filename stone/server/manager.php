@@ -61,7 +61,7 @@ class Manager
             $port = null;
 
             //deny user define the main for listen name
-            if(strtolower($serverName) == "Main"){
+            if (strtolower($serverName) == "Main") {
                 throw new \Exception("please don't set server name to Main for sub listen");
             }
 
