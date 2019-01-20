@@ -19,7 +19,7 @@ class EventRegister
         //worker刚启动时都加载那些内容
         //放在这里是为了未来reload使用
 
-        \WhetStone\Stone\Server\Event::register("worker_start", function () {
+        \WhetStone\Stone\Server\Event::register("worker_start", function ($param) {
 
             //load all config
             \WhetStone\Stone\Config::loadAllConfig();
@@ -35,40 +35,42 @@ class EventRegister
         //公用事件请参考stone\server\event内注释
         //目前所有异常都在根协程
 
-        \WhetStone\Stone\Server\Event::register("Main_request", function () {
+        \WhetStone\Stone\Server\Event::register("Main_request", function ($param) {
 
-            try {
-                $context = \WhetStone\Stone\Context::getContext();
+            $context = \WhetStone\Stone\Context::getContext();
 
-                //获取请求信息
-                $request = $context->get("request");
-                $method  = $request->getMethod();
-                $uri     = $request->getUri();
+            //获取请求信息
+            $request = $context->get("request");
+            $method = $request->getMethod();
+            $uri = $request->getUri();
 
-                /**
-                 * 拿到已经初始化成功的router
-                 * 根据router规则找到对应的控制器配置(handle)来自于conf/router.php
-                 **/
-                $router = \WhetStone\Stone\Di::get("router");
+            /**
+             * 拿到已经初始化成功的router
+             * 根据router规则找到对应的控制器配置(handle)来自于conf/router.php
+             **/
+            $router = \WhetStone\Stone\Di::get("router");
 
-                //查找并执行router.php内的handle
-                //返回结果只有两种情况，一种直接返回，一种是异常
-                //返回格式由controller决定
-                $result = $router->dispatch($method, $uri);
+            //查找并执行router.php内的handle
+            //返回结果只有两种情况，一种直接返回，一种是异常
+            //返回格式由controller决定
+            $result = $router->dispatch($method, $uri);
 
-                //获取response对象
-                $response = $context->get("response");
-                //返回结果
-                $response->end($result);
+            //获取response对象
+            $response = $context->get("response");
+            //返回结果
+            $response->end($result);
 
-            } catch (\Exception $e) {
-                //todo:错误处理怎么搞
-                var_dump($e->getMessage(), $e->getTraceAsString());
-            } catch (\Throwable $e) {
-                //todo:错误处理怎么搞
-                var_dump($e->getMessage(), $e->getTraceAsString());
+        });
+
+        //最后拦截掉所有Exception异常
+        //因为再产生异常都是worker和业务了
+        \WhetStone\Stone\Server\Event::register("exception", function ($param) {
+            if(preg_match("/cli/i", php_sapi_name())){
+                $e = $param["exception"];
+                var_dump("Exception Was Founded:");
+                var_dump($e->getMessage(),$e->getCode());
+                var_dump($e->getTraceAsString());
             }
-
 
         });
     }

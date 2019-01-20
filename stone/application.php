@@ -86,7 +86,8 @@ class Application
     {
 
         //如果没有注册处理，默认输出到屏幕
-        if (Event::checkRegisted("exception")) {
+        if (Event::checkRegisted("exception") && preg_match("/cli/i", php_sapi_name())) {
+            //由于是命令行，所以这里是安全的, 用户不可见
             var_dump("Exception Was Founded:");
             var_dump($e->getMessage(),$e->getCode());
             var_dump($e->getTraceAsString());

@@ -28,9 +28,6 @@ class Manager
         //open coroutine
         \Swoole\Runtime::enableCoroutine(true);
 
-        //invoke register event
-        $this->event = new \WhetStone\EventRegister();
-
         //register main server
         $serverType = strtolower($this->config["server"]["server"]);
         if ($serverType == "websocket") {
@@ -93,6 +90,15 @@ class Manager
             }
 
         }
+
+        //这里开始初始化注册事件
+        //放在这里是因为
+        //用户的自定义注册会拦截系统错误一类
+        //这里已经执行了加载了大部分框架所需
+        //剩余的都是请求期间处理
+
+        //invoke register event
+        $this->event = new \WhetStone\EventRegister();
 
         //start server
         $server->start();
