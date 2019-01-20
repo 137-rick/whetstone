@@ -24,6 +24,7 @@ class EventRegister
             //load all config
             \WhetStone\Stone\Config::loadAllConfig();
 
+            //set router config to di
             $routerConfig = \WhetStone\Stone\Config::getConfig("router");
             \WhetStone\Stone\Di::set("router", new \WhetStone\Stone\Router\Router($routerConfig));
 
@@ -32,6 +33,7 @@ class EventRegister
         //on worker start init some event
         //Main 是主服务别名，下划线后是事件名，具体事件名可以在protocol下参考event的fire函数
         //公用事件请参考stone\server\event内注释
+        //目前所有异常都在根协程
 
         \WhetStone\Stone\Server\Event::register("Main_request", function () {
 
@@ -43,8 +45,10 @@ class EventRegister
                 $method  = $request->getMethod();
                 $uri     = $request->getUri();
 
-                //拿到已经初始化成功的router
-                //根据router规则找到对应的控制器配置(handle)来自于conf/router.php
+                /**
+                 * 拿到已经初始化成功的router
+                 * 根据router规则找到对应的控制器配置(handle)来自于conf/router.php
+                 **/
                 $router = \WhetStone\Stone\Di::get("router");
 
                 //查找并执行router.php内的handle

@@ -43,11 +43,14 @@ class Router
     public function dispatch($method, $uri)
     {
 
+        //解析路由
         $routeInfo = $this->dispatcher->dispatch($method, $uri);
 
+        //result status decide
         switch ($routeInfo[0]) {
             case\FastRoute\Dispatcher::NOT_FOUND:
                 // ... 404 Not Found
+                //try default router
                 return $this->defaultRouter($method, $uri);
                 break;
             case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
@@ -93,7 +96,7 @@ class Router
                     return $controller->$func();
 
                 } else if (is_callable($handler)) {
-                    //call direct
+                    //call direct when router define an callable function
                     return call_user_func($handler);
                 } else {
                     throw new \Exception("Router Config error on handle." . $uri, -108);
@@ -104,13 +107,40 @@ class Router
 
     /**
      * 默认路由方式
-     * @param $method
-     * @param $uri
+     * @param string $method
+     * @param string $uri
      * @throws \Exception
+     * @return string
      */
     public function defaultRouter($method, $uri)
     {
-        throw new \Exception("Url Router define Not Found", 404);
+
+        //没有默认根目录请求
+        //如果需要使用fastrouter自行定义
+        //原因：不安全
+
+        if(empty($uri)){
+            throw new \Exception("uri is empty", -111);
+        }
+
+        $uri = trim($uri,"/");
+        $uri = explode("/", $uri);
+        $function = array_pop($uri);
+        $className = implode("\\", $uri);
+
+        if(!class_exists($className)){
+            throw new \Exception("Default Router $uri Handle definded Class Not Found", -109);
+        }
+
+        $controller = new $className();
+
+        if(!method_exists($controller, $function)){
+            throw new \Exception("Default Router $uri Handle definded $function Method Not Found", -110);
+        }
+
+        //invoke controller and get result
+        return $controller->$function();
+
     }
 
 
