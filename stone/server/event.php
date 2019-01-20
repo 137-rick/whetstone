@@ -11,7 +11,10 @@ class Event
 
     private static $_eventList = array();
 
-    //框架自带
+    /////////////
+    //框架自带事件
+    /////////////
+
     //server_shutdown
     //server_start
     //manager_start
@@ -22,6 +25,15 @@ class Event
     //task
     //task_finish
 
+    /////////////
+    /// 通讯事件
+    /////////////
+    /// 来自于/config/server.php
+    /// 主服务使用Main_事件
+    /// 子监听使用 子端口服务名称_事件
+    /// 具体事件在stone/protocol/下查看
+    ////////////
+    
     /**
      * 注册Event
      * @param $event
