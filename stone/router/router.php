@@ -51,7 +51,7 @@ class Router
             case\FastRoute\Dispatcher::NOT_FOUND:
                 // ... 404 Not Found
                 //try default router
-                return $this->defaultRouter($method, $uri);
+                return $this->defaultRouter($uri);
                 break;
             case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                 //$allowedMethods = $routeInfo[1];
@@ -109,12 +109,11 @@ class Router
 
     /**
      * 默认路由方式
-     * @param string $method
      * @param string $uri
      * @throws \Exception
      * @return string
      */
-    public function defaultRouter($method, $uri)
+    public function defaultRouter($uri)
     {
 
         if(empty($uri)){

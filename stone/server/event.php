@@ -49,4 +49,25 @@ class Event
             }
         }
     }
+
+    /**
+     * 取消所有已注册事件
+     * @param $event
+     */
+    public static function clean($event){
+        unset(self::$_eventList[$event]);
+    }
+
+    /**
+     * 检测是否注册自定义事件，如没有注册框架可以自行处理
+     * @param $event
+     * @return bool 如果已经存在，返回true
+     */
+    public static function checkRegisted($event){
+        if (isset(self::$_eventList[$event])
+            && !empty(self::$_eventList[$event])) {
+            return true;
+        }
+        return false;
+    }
 }

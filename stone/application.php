@@ -80,15 +80,20 @@ class Application
     /**
      * 统一未拦截exception处理
      * @param $e
+     * @return bool
      */
     function ExceptionHandle($e)
     {
-        //if(php_sapi_name() == "cli"){
-        var_dump("Exception Founded:");
-        var_dump($e->getMessage());
-        var_dump($e->getCode());
-        var_dump($e->getTraceAsString());
-        //}
+
+        //如果没有注册处理，默认输出到屏幕
+        if (Event::checkRegisted("exception")) {
+            var_dump("Exception Was Founded:");
+            var_dump($e->getMessage(),$e->getCode());
+            var_dump($e->getTraceAsString());
+            return true;
+        }
+
+        //如果有注册，那么触发
         Event::fire("exception", array(
             "exception" => $e,
         ));
