@@ -103,6 +103,8 @@ class Router
                 }
                 break;
         }
+        throw new \Exception("Unknow Fast Router decide " . $uri, -101);
+
     }
 
     /**
@@ -115,10 +117,6 @@ class Router
     public function defaultRouter($method, $uri)
     {
 
-        //没有默认根目录请求
-        //如果需要使用fastrouter自行定义
-        //原因：不安全
-
         if(empty($uri)){
             throw new \Exception("uri is empty", -111);
         }
@@ -128,18 +126,36 @@ class Router
         $function = array_pop($uri);
         $className = implode("\\", $uri);
 
-        if(!class_exists($className)){
-            throw new \Exception("Default Router $uri Handle definded Class Not Found", -109);
+        //第一次尝试，直接找对应类，找不到再尝试默认index
+        if(class_exists($className)){
+
+            $controller = new $className();
+
+            if(method_exists($controller, $function)){
+                //invoke controller and get result
+                return $controller->$function();
+            }
+
         }
 
-        $controller = new $className();
+        //找回分离出去的路径
+        $className = $className . "\\" . $function ;
+        $function = "index";
 
-        if(!method_exists($controller, $function)){
-            throw new \Exception("Default Router $uri Handle definded $function Method Not Found", -110);
+        //再次尝试
+        if(class_exists($className)){
+
+            $controller = new $className();
+
+            if(method_exists($controller, $function)){
+                //invoke controller and get result
+                return $controller->$function();
+            }
+
         }
 
-        //invoke controller and get result
-        return $controller->$function();
+        //找不到了
+        throw new \Exception("Default Router $uri Handle define Class Not Found", -109);
 
     }
 
