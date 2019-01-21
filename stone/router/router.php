@@ -109,6 +109,9 @@ class Router
 
     /**
      * 默认路由方式
+     * 如果fastrouter没有设置路由，那么会请求到这里
+     * 默认路由会根据uri到对应目录找文件，找到会调用他
+     * 这么做是为了方便开发，个性设置走个性设置，常规默认能工作
      * @param string $uri
      * @throws \Exception
      * @return string

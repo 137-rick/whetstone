@@ -31,8 +31,9 @@ class Coroutine
                 $callback(...$argument);
             }catch (\Swoole\ExitException $e){
                 //do nothing
+                //这里是执行exit产生的事件，忽略即可
             }catch (\Throwable $e){
-                //todo:这里没有处理啊
+                //todo:这里没有处理啊,计划传递到外面去
             }
         });
     }

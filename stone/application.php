@@ -106,7 +106,7 @@ class Application
      */
     function ShutDownHandle()
     {
-        Event::fire("exit", array());
+        Event::fire("shutdown", array());
     }
 
 }

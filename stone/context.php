@@ -42,10 +42,10 @@ class Context
     {
         $cid = \Swoole\Coroutine::getUid();
         if ($cid == -1) {
-            throw new \Exception("传入非协程id", -332);
+            throw new \Exception("目前并没有在协程内", -332);
         }
 
-        //已经存在不创建
+        //已经存在context不创建
         if (isset(self::$_parentIdMap[$cid]) && isset(self::$_contextList[self::$_parentIdMap[$cid]])) {
             return self::$_contextList[self::$_parentIdMap[$cid]];
         }
@@ -68,7 +68,7 @@ class Context
             //用这个做是否释放context依据
             self::$_parentIdChildren[$cid] = array($cid);
 
-            //协程退出，清理痕迹
+            //根协程退出，清理所有痕迹
             \Swoole\Coroutine::defer(function () use ($cid) {
                 self::delContext($cid);
             });
@@ -76,10 +76,10 @@ class Context
             return self::$_contextList[$cid];
         }
 
-        //但根协程存在，当前子协程
+        //根协程存在，当前为根下创建的子协程
         if ($parentCid != $cid && isset(self::$_contextList[$parentCid])) {
 
-            //记录父映射关系
+            //记录当前协程的父映射关系
             self::$_parentIdMap[$cid] = $parentCid;
 
             //记录children 引用
@@ -89,7 +89,7 @@ class Context
 
             //不创建context
 
-            //当前协程退出，清理痕迹
+            //当前子协程退出，清理痕迹
             \Swoole\Coroutine::defer(function () use ($cid) {
                 self::delContext($cid);
             });
@@ -136,13 +136,14 @@ class Context
             throw new \Exception("当前在非协程状态", -334);
         }
 
-        //获取根pid
+        //获取根协程cid
         $pid = self::getPid($cid);
         if ($pid == -1) {
             throw new \Exception("没有找到根context cid", -335);
         }
 
-        //没有父context返回null
+        //没有父context报错
+        //todo:这里有争议，如果子协程还没跑完，父协程已经退出了，可能会有问题，需要和上面delcontext引用计数配合
         if (!isset(self::$_contextList[$pid])) {
             throw new \Exception("没有找到根context", -336);
         }
