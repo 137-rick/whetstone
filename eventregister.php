@@ -2,6 +2,7 @@
 
 namespace WhetStone;
 
+
 /**
  * 这里是一个demo
  * 利用event注册功能，我们可以在事件产生时触发用户自定义回调
@@ -37,28 +38,32 @@ class EventRegister
 
         \WhetStone\Stone\Server\Event::register("Main_request", function ($param) {
 
-            $context = \WhetStone\Stone\Context::getContext();
+            try{
+                $context = \WhetStone\Stone\Context::getContext();
 
-            //获取请求信息
-            $request = $context->get("request");
-            $method = $request->getMethod();
-            $uri = $request->getUri();
+                //获取请求信息
+                $request = $context->get("request");
+                $method = $request->getMethod();
+                $uri = $request->getUri();
 
-            /**
-             * 拿到已经初始化成功的router
-             * 根据router规则找到对应的控制器配置(handle)来自于conf/router.php
-             **/
-            $router = \WhetStone\Stone\Di::get("router");
+                /**
+                 * 拿到已经初始化成功的router
+                 * 根据router规则找到对应的控制器配置(handle)来自于conf/router.php
+                 **/
+                $router = \WhetStone\Stone\Di::get("router");
 
-            //查找并执行router.php内的handle
-            //返回结果只有两种情况，一种直接返回，一种是异常
-            //返回格式由controller决定
-            $result = $router->dispatch($method, $uri);
+                //查找并执行router.php内的handle
+                //返回结果只有两种情况，一种直接返回，一种是异常
+                //返回格式由controller决定
+                $result = $router->dispatch($method, $uri);
 
-            //获取response对象
-            $response = $context->get("response");
-            //返回结果
-            $response->end($result);
+                //获取response对象
+                $response = $context->get("response");
+                //返回结果
+                $response->end($result);
+            }catch (\Swoole\ExitException $e){
+                //ignore exit exception
+            }
 
         });
 
