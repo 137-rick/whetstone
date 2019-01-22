@@ -8,22 +8,34 @@ return array(
             "0" => array(
                 "host" => "127.0.0.1",
                 "port" => 6379,
-                "auth" => "test", //没有就两个双引号
+                "auth" => "", //没有就两个双引号
+                "prefix" => "" ,
+                "timeout" => 3.0,
+                "db"  => 0,
             ),
             "1" => array(
                 "host" => "127.0.0.1",
                 "port" => 6379,
-                "auth" => "test",
+                "auth" => "",
+                "prefix" => "" ,
+                "timeout" => 3.0,
+                "db"  => 0,
             ),
             "2" => array(
                 "host" => "127.0.0.1",
                 "port" => 6379,
-                "auth" => "test",
+                "auth" => "",
+                "prefix" => "" ,
+                "timeout" => 3.0,
+                "db"  => 0,
             ),
             "3" => array(
                 "host" => "127.0.0.1",
                 "port" => 6379,
-                "auth" => "test",
+                "auth" => "",
+                "prefix" => "" ,
+                "timeout" => 3.0,
+                "db"  => 0,
             ),
 
         ),
@@ -49,7 +61,10 @@ return array(
         "connection" => array(
             "host" => "127.0.0.1",
             "port" => 6379,
-            "auth" => "test", //没有就两个双引号
+            "auth" => "", //没有就两个双引号
+            "prefix" => "" ,
+            "timeout" => 3.0,
+            "db"  => 0,
         ),
     ),
     //需要主从就做两个配置即可
