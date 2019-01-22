@@ -7,5 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'WhetStone\\' => array($baseDir . '/'),
+    'Predis\\' => array($vendorDir . '/predis/predis/src'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
 );

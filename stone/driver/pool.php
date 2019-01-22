@@ -21,9 +21,6 @@ abstract class Pool
     //正在被调用个数
     private $_invokeObjCount = 0;
 
-    //如果连接池没有空余等待多久报错
-    private $_waitDelay = 3.0;
-
     /////////////////////////////////////////////////////
     //获取对象，对象必须自带重连
 

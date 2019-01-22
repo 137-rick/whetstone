@@ -15,6 +15,10 @@ class ComposerStaticInit9357dbcef28ac55f1484322894876918
         array (
             'WhetStone\\' => 10,
         ),
+        'P' => 
+        array (
+            'Predis\\' => 7,
+        ),
         'F' => 
         array (
             'FastRoute\\' => 10,
@@ -25,6 +29,10 @@ class ComposerStaticInit9357dbcef28ac55f1484322894876918
         'WhetStone\\' => 
         array (
             0 => __DIR__ . '/../..' . '/',
+        ),
+        'Predis\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/predis/predis/src',
         ),
         'FastRoute\\' => 
         array (
