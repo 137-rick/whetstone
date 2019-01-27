@@ -10,7 +10,6 @@ return array(
             "database" => "whetstone",
             "timeout" => 10.0,
             "charset" => "utf8",
-            "fetch_mode" => true,
         ),
         "write" => array(
             "host" => "127.0.0.1",
@@ -20,7 +19,6 @@ return array(
             "database" => "whetstone",
             "timeout" => 10.0,
             "charset" => "utf8",
-            "fetch_mode" => true,
         ),
     ),
 
@@ -33,7 +31,6 @@ return array(
             "database" => "whetstone",
             "timeout" => 10.0,
             "charset" => "utf8",
-            "fetch_mode" => true,
         ),
         "write" => array(
             "host" => "127.0.0.1",
@@ -43,7 +40,6 @@ return array(
             "database" => "whetstone",
             "timeout" => 10.0,
             "charset" => "utf8",
-            "fetch_mode" => true,
         ),
     )
 );
