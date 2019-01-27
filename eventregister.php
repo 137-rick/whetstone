@@ -42,7 +42,7 @@ class EventRegister
                 $context = \WhetStone\Stone\Context::getContext();
 
                 //获取请求信息
-                $request = $context->get("request");
+                $request = $context->getRequest();
                 $method = $request->getMethod();
                 $uri = $request->getUri();
 

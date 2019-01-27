@@ -64,7 +64,7 @@ class Router
 
                 $context = \WhetStone\Stone\Context::getContext();
                 //拿到request对象
-                $request = $context->get("request");
+                $request = $context->getRequest();
                 //设置网址内包含的参数
                 $request->setRequestUrlParam($vars);
 

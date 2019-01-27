@@ -193,6 +193,22 @@ class Context
     }
 
     /**
+     * 获取到request
+     * @return mixed
+     */
+    public function getRequest(){
+        return $this->data["request"];
+    }
+
+    /**
+     * 获取到response
+     * @return mixed
+     */
+    public function getResponse(){
+        return $this->data["response"];
+    }
+
+    /**
      * 获取附加信息
      * @param $key
      * @return mixed|null
