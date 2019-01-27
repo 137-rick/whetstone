@@ -1,13 +1,13 @@
 <?php
 
-namespace WhetStone\Stone\Driver;
+namespace WhetStone\Stone\Driver\Redis;
 
 /**
  * 基础新版Redis驱动做的
  * 新版本明确服务器不可回应时抛出异常
  *
  * Class Redis
- * @package WhetStone\Stone\Driver
+ * @package WhetStone\Stone\Driver\Redis
  */
 class Redis
 {
@@ -33,7 +33,7 @@ class Redis
             if ($this->redis->ping() != "+PONG") {
                 $this->reconnect();
             }
-        } catch (\RedisException $e) {
+        } catch (\Exception $e) {
             $this->reconnect();
         }
     }
