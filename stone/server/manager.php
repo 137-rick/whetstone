@@ -97,8 +97,11 @@ class Manager
         //这里已经执行了加载了大部分框架所需
         //剩余的都是请求期间处理
 
-        //invoke register event
-        $this->event = new \WhetStone\EventRegister();
+        if(!empty($this->config["event"]["register"])){
+            //invoke register event
+            $eventClassName = $this->config["event"]["register"];
+            $this->event = new $eventClassName();
+        }
 
         //start server
         $server->start();

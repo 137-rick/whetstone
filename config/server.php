@@ -29,6 +29,11 @@ return array(
         ),
     ),
 
+    "event" => array(
+        //事件注册器，用于用户注册系统事件监听
+        "register" => "\WhetStone\EventRegister",
+    ),
+
     "swoole" => array(
         'user'               => 'nobody',
         'group'              => 'nobody',
