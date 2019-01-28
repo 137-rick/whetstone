@@ -76,6 +76,6 @@ class Redis
         $this->checkConnection();
 
         //do the cmd，如果刚检测完还报错，那。。。
-        return call_user_func($this->redis, $arguments);
+        return call_user_func_array(array($this->redis, $name), $arguments);
     }
 }
