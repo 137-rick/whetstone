@@ -74,6 +74,7 @@ class PRedis
         //timeout
         $config["timeout"] = $this->config["timeout"] ?? 5.0;
         $config["read_write_timeout"] = $config["timeout"];
+
         //new predis
         $this->redis = new \Predis\Client($config, $option);
 
@@ -84,7 +85,8 @@ class PRedis
         //check is work well
         $this->checkConnection();
 
+        $this->redis->$name(...$arguments);
         //do the cmd，如果刚检测完还报错，那。。。
-        return call_user_func($this->redis, $arguments);
+        return call_user_func_array(array($this->redis, $name), $arguments);
     }
 }

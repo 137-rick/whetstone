@@ -63,6 +63,8 @@ class EventRegister
                 $response->end($result);
             }catch (\Swoole\ExitException $e){
                 //ignore exit exception
+            }catch (\Throwable $e){
+                var_dump($e);
             }
 
         });
