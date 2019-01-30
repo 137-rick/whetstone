@@ -29,6 +29,17 @@ class EventRegister
             $routerConfig = \WhetStone\Stone\Config::getConfig("router");
             \WhetStone\Stone\Di::set("router", new \WhetStone\Stone\Router\Router($routerConfig));
 
+            $config = array(
+                "host" => "127.0.0.1",
+                "port" => 6379,
+                //"auth" => "",
+                "prefix" => "" ,
+                "timeout" => 3.0,
+                "db"  => 0,
+            );
+            $redis = new \WhetStone\Stone\Driver\Redis(50,3.0,"default",$config);
+            \WhetStone\Stone\Di::set("predis", $redis);
+
         });
 
         //on worker start init some event
@@ -64,7 +75,13 @@ class EventRegister
             }catch (\Swoole\ExitException $e){
                 //ignore exit exception
             }catch (\Throwable $e){
-                var_dump($e);
+                $result = array(
+                    "code" => $e->getCode(),
+                    "msg" => $e->getMessage(),
+                    "data" => array(),
+                    "backtrace" => $e->getTraceAsString(),
+                );
+                echo json_encode($result, JSON_PRETTY_PRINT);
             }
 
         });

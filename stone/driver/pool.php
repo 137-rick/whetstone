@@ -13,7 +13,7 @@ abstract class Pool
 
     private $_pool = NULL;
 
-    private $_config = NULL;
+    protected $_config = NULL;
 
     //整体最多连接数
     private $_maxObjCount = 50;
@@ -35,7 +35,7 @@ abstract class Pool
         $this->_maxObjCount = $maxObjCount;
         $this->_waitDelay   = $waitTimeout;
         $this->_config      = $config;
-        $this->_pool        = new \Swoole\Coroutine\Channel($maxObjCount + 20);
+        $this->_pool        = new \Swoole\Coroutine\Channel($maxObjCount);
 
         /*
         //cycle check connection count
@@ -119,9 +119,13 @@ abstract class Pool
 
     }*/
 
+    /**
+     * 获取数据对象，return对象即可
+     * @return mixed
+     */
     abstract public function getDriverObj();
 
-    private function recycleObj($obj): bool
+    private function recycleObj($obj)
     {
         if (empty($obj)) {
             return;

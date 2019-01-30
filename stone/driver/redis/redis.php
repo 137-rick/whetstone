@@ -41,6 +41,12 @@ class Redis
     public function reconnect()
     {
         $this->redis = new \Redis();
+        
+        //connect the server
+        $ret = $this->redis->connect($this->config["host"], $this->config["port"], $this->config["timeout"] ?? 0);
+        if (!$ret) {
+            throw new \Exception("connect Redis Server fail:" . $this->redis->getLastError(), -24);
+        }
 
         $this->redis->setOption(\Redis::OPT_SCAN, \Redis::SCAN_RETRY);
         $this->redis->setOption(\Redis::OPT_READ_TIMEOUT, -1);
@@ -62,11 +68,6 @@ class Redis
             $this->redis->select($this->config["db"]);
         }
 
-        //connect the server
-        $ret = $this->redis->connect($this->config["host"], $this->config["port"], $this->config["timeout"] ?? 0);
-        if (!$ret) {
-            throw new \Exception("connect Redis Server fail:" . $this->redis->getLastError(), -24);
-        }
 
     }
 
