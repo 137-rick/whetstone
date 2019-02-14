@@ -51,6 +51,9 @@ class Manager
         //set option
         $server->set($this->config["swoole"]);
 
+        //server config info
+        Di::set("server_config", $this->config);
+
         //store server obj on di
         Di::set("server", $server);
 
