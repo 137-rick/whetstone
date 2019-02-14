@@ -13,6 +13,9 @@ use WhetStone\Stone\Server\Event;
 class Base
 {
 
+    /**
+     * @var null|\swoole_server
+     */
     protected $_server = null;
     protected $_config = null;
 

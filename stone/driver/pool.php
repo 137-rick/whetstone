@@ -6,7 +6,6 @@ namespace WhetStone\Stone\Driver;
  * 触发式连接池
  * 空余连接数不够才会增长连接数
  * 连接到达上限会阻塞等待指定秒数后抛异常
- * Class Fend_Pool
  */
 abstract class Pool
 {
@@ -37,12 +36,12 @@ abstract class Pool
         $this->_config      = $config;
         $this->_pool        = new \Swoole\Coroutine\Channel($maxObjCount);
 
-        /*
-        //cycle check connection count
-        swoole_timer_tick(3000, function () {
-            $this->heartBeat();
-        });
-        */
+        //一次性创建好所有连接
+        //失败一个会异常抛出
+        for ($count = 0; $count < $maxObjCount; $count++) {
+            $obj = $this->getDriverObj();
+            $this->_pool->push($obj);
+        }
     }
 
     //对象报错时会调用这个函数整理错误
@@ -52,7 +51,7 @@ abstract class Pool
      * @param string $name 动作名称
      * @param array $arguments 参数
      * @return mixed
-     * @throws Exception
+     * @throws
      */
     public function __call($name, $arguments)
     {
@@ -74,14 +73,21 @@ abstract class Pool
             throw $e;
         }
     }
+
     /////////////////////////////////////////////////////
 
     private function fetchObj()
     {
         //pool is empty and have idle space
-        if ($this->_pool->isEmpty() && $this->_invokeObjCount < $this->_maxObjCount) {
-            $obj = $this->getDriverObj();
-            $this->_invokeObjCount++;
+        if ($this->_pool->isEmpty() && ($this->_invokeObjCount + $this->_pool->length() < $this->_maxObjCount)) {
+            try {
+                $this->_invokeObjCount++;
+                $obj = $this->getDriverObj();
+            } catch (\Exception $e) {
+                $this->_invokeObjCount--;
+                throw $e;
+            }
+
             return $obj;
         }
 
@@ -95,29 +101,9 @@ abstract class Pool
             return $obj;
         }
 
-        //fetch fail
+        //fetch fail max arrive
         throw new \Exception("fetch pool obj fail... please increase the connection pool size.", -123);
     }
-
-
-    /*
-    private function heartBeat()
-    {
-
-        //min count of connection
-        for ($addCount = $this->_minObjCount - ($this->_invokeObjCount + $this->_pool->length()); $addCount > 0; $addCount--) {
-
-            //make sure queue nerver jam
-            if ($this->_pool->isFull()) {
-                break;
-            }
-
-            //create obj and add to channel
-            //if create fail throw exception
-            $this->_pool->push($this->getDriverObj());
-        }
-
-    }*/
 
     /**
      * 获取数据对象，return对象即可

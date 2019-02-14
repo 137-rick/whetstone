@@ -2,7 +2,7 @@
 ini_set("memory_limit","2G");
 return array(
     //debug 模式
-    "debug" => false,
+    "debug" => true,
 
     //主服务，选主服务 建议按 websocket（http） > http > udp || tcp 顺序创建 ,websocket只能作为主进程
     "server" => array(
@@ -54,7 +54,7 @@ return array(
         'heartbeat_check_interval' => 60,
 
         'open_cpu_affinity'       => 1,
-        'worker_num'              => 4,
+        'worker_num'              => 1,
         'task_worker_num'         => 0,//task个数，目前默认0
         'max_request'             => 0,
         'task_max_request'        => 0,
@@ -71,7 +71,7 @@ return array(
 
         'pid_file' => '/home/logs/server/stone.pid',
 
-        'daemonize' => 1,
+        'daemonize' => 0,
     ),
 
 );

@@ -28,16 +28,22 @@ class Manager
         //open coroutine
         \Swoole\Runtime::enableCoroutine(true);
 
+        $processMode = SWOOLE_PROCESS;
+
+        //是否开启debug模式，如果开启将会使用base模式执行
+        if (isset($this->config["debug"]) && $this->config["debug"]) {
+            $processMode = SWOOLE_BASE;
+        }
         //register main server
         $serverType = strtolower($this->config["server"]["server"]);
         if ($serverType == "websocket") {
-            $server = new \Swoole\WebSocket\Server($this->config["server"]["host"], $this->config["server"]["port"]);
+            $server = new \Swoole\WebSocket\Server($this->config["server"]["host"], $this->config["server"]["port"],$processMode);
         } elseif ($serverType == "http") {
-            $server = new \Swoole\Http\Server($this->config["server"]["host"], $this->config["server"]["port"]);
+            $server = new \Swoole\Http\Server($this->config["server"]["host"], $this->config["server"]["port"], $processMode);
         } elseif ($serverType == "tcp") {
-            $server = new \Swoole\Server($this->config["server"]["host"], $this->config["server"]["port"]);
+            $server = new \Swoole\Server($this->config["server"]["host"], $this->config["server"]["port"],$processMode);
         } elseif ($serverType == "udp") {
-            $server = new \Swoole\Server($this->config["server"]["host"], $this->config["server"]["port"], SWOOLE_PROCESS, SWOOLE_SOCK_UDP);
+            $server = new \Swoole\Server($this->config["server"]["host"], $this->config["server"]["port"], $processMode, SWOOLE_SOCK_UDP);
         } else {
             throw new \Exception("unknow config type of server server", -12);
         }
@@ -97,10 +103,10 @@ class Manager
         //这里已经执行了加载了大部分框架所需
         //剩余的都是请求期间处理
 
-        if(!empty($this->config["event"]["register"])){
+        if (!empty($this->config["event"]["register"])) {
             //invoke register event
             $eventClassName = $this->config["event"]["register"];
-            $this->event = new $eventClassName();
+            $this->event    = new $eventClassName();
         }
 
         //start server
