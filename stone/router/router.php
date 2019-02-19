@@ -126,7 +126,7 @@ class Router
         $uri = trim($uri,"/");
         $uri = explode("/", $uri);
         $function = array_pop($uri);
-        $className = implode("\\", $uri);
+        $className = "\\WhetStone\\Controller\\".implode("\\", $uri);
 
         //第一次尝试，直接找对应类，找不到再尝试默认index
         if(class_exists($className)){

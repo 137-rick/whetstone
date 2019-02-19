@@ -54,7 +54,18 @@ abstract class Pool
         }
     }
 
-    //对象报错时会调用这个函数整理错误
+    /**
+     * 获取连接池连接个数情况
+     * @return array
+     */
+    public function getConnectionStatus(){
+        $result = array();
+        foreach ($this->_pool as $key => $queue){
+            $result[$key] = $queue->length();
+        }
+        return $result;
+    }
+
 
     /**
      * 对象调用操作
@@ -72,6 +83,7 @@ abstract class Pool
         if ($this->_config["type"] == "sharding") {
             $key     = current($arguments);
             $shardId = Sharding::getHashId($key);
+            $shardId = $this->_config["shard"][$shardId];
         }
 
         try {
@@ -150,6 +162,7 @@ abstract class Pool
         return $this->_pool[$shardId]->push($obj);
     }
 
+    //对象报错时会调用这个函数整理错误
     abstract public function onError($obj, $e);
 
 
