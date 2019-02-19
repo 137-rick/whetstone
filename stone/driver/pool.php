@@ -15,6 +15,8 @@ abstract class Pool
 
     protected $_config = NULL;
 
+    protected $_waitDelay = 3.0;
+
     //整体最多连接数
     private $_maxObjCount = 50;
 
@@ -66,6 +68,7 @@ abstract class Pool
         $obj     = null;
         $shardId = 0;
 
+        //分区模式才会计算分区，否则都用0区域
         if ($this->_config["type"] == "sharding") {
             $key     = current($arguments);
             $shardId = Sharding::getHashId($key);
@@ -112,7 +115,7 @@ abstract class Pool
 
         //channel have obj
         //fetch obj by 3 second wait
-        $obj = $this->_pool[$shardId]->pop(3.0);
+        $obj = $this->_pool[$shardId]->pop($this->_waitDelay);
 
         if ($obj !== FALSE) {
             //increase count

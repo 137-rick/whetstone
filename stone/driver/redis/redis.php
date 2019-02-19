@@ -2,7 +2,11 @@
 
 namespace WhetStone\Stone\Driver\Redis;
 
-
+/**
+ * Redis驱动类
+ * Class Redis
+ * @package WhetStone\Stone\Driver\Redis
+ */
 class Redis
 {
 

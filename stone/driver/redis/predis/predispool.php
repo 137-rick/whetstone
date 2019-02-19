@@ -4,6 +4,11 @@ namespace WhetStone\Stone\Driver\Redis\Predis;
 
 use WhetStone\Stone\Driver\Pool;
 
+/**
+ * Predis 连接池封装
+ * Class PredisPool
+ * @package WhetStone\Stone\Driver\Redis\Predis
+ */
 class PredisPool extends Pool
 {
 

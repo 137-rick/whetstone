@@ -4,6 +4,11 @@ namespace WhetStone\Stone\Driver\Redis\PHPRedis;
 
 use WhetStone\Stone\Driver\Pool;
 
+/**
+ * phpredis连接池封装
+ * Class RedisPool
+ * @package WhetStone\Stone\Driver\Redis\PHPRedis
+ */
 class RedisPool extends Pool
 {
 
