@@ -1,6 +1,6 @@
 <?php
 
-namespace WhetStone\Stone\Driver\Redis;
+namespace WhetStone\Stone\Driver\Redis\Predis;
 
 /**
  * 基础PRedis驱动做的
@@ -18,6 +18,9 @@ class PRedis
 
     //redis 对象
     private $redis = null;
+
+    //最后检测连接时间
+    private $lastPingTime = 0;
 
     /**
      *
@@ -37,12 +40,16 @@ class PRedis
     //if connection is broken reconnect
     public function checkConnection()
     {
-        try {
-            if ($this->redis->ping() != "+PONG") {
+        if ($this->lastPingTime + 5 <= time()) {
+
+            try {
+                if ($this->redis->ping() != "+PONG") {
+                    $this->reconnect();
+                }
+            } catch (\Exception $e) {
                 $this->reconnect();
             }
-        } catch (\Exception $e) {
-            $this->reconnect();
+            $this->lastPingTime = time();
         }
     }
 
@@ -84,9 +91,12 @@ class PRedis
     {
         //check is work well
         $this->checkConnection();
-
-        $this->redis->$name(...$arguments);
-        //do the cmd，如果刚检测完还报错，那。。。
-        return call_user_func_array(array($this->redis, $name), $arguments);
+        try{
+            //do the cmd，如果刚检测完还报错，那。。。再来一次吧
+            return call_user_func_array(array($this->redis, $name), $arguments);
+        }catch (\Exception $e){
+            $this->reconnect();
+            return call_user_func_array(array($this->redis, $name), $arguments);
+        }
     }
 }

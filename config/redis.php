@@ -3,7 +3,8 @@
 return array(
     //hash分区redis
     "test_redis_shard" => array(
-        "type" => "shard",
+        "pool" => 20,
+        "type" => "sharding",
         "connection" => array(
             "0" => array(
                 "host" => "127.0.0.1",
@@ -58,13 +59,16 @@ return array(
     //普通单个redis链接方式
     "test_redis_common" => array(
         "type" => "common",
+        "pool" => 50,
         "connection" => array(
-            "host" => "127.0.0.1",
-            "port" => 6379,
-            "auth" => "", //没有就两个双引号
-            "prefix" => "" ,
-            "timeout" => 3.0,
-            "db"  => 0,
+            array(
+                "host" => "127.0.0.1",
+                "port" => 6379,
+                "auth" => "", //没有就两个双引号
+                "prefix" => "" ,
+                "timeout" => 3.0,
+                "db"  => 0,
+            )
         ),
     ),
     //需要主从就做两个配置即可

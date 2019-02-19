@@ -6,11 +6,12 @@ namespace WhetStone\Stone\Driver;
  * 触发式连接池
  * 空余连接数不够才会增长连接数
  * 连接到达上限会阻塞等待指定秒数后抛异常
+ * 这个只是基础类，继承后方可使用
  */
 abstract class Pool
 {
 
-    private $_pool = NULL;
+    private $_pool = array();
 
     protected $_config = NULL;
 
@@ -34,13 +35,20 @@ abstract class Pool
         $this->_maxObjCount = $maxObjCount;
         $this->_waitDelay   = $waitTimeout;
         $this->_config      = $config;
-        $this->_pool        = new \Swoole\Coroutine\Channel($maxObjCount);
 
-        //一次性创建好所有连接
-        //失败一个会异常抛出
-        for ($count = 0; $count < $maxObjCount; $count++) {
-            $obj = $this->getDriverObj();
-            $this->_pool->push($obj);
+        //如果不是分片默认就是0分片
+        for ($shardid = 0; $shardid < count($this->_config["connection"]); $shardid++) {
+
+            //create shard obj pool
+            $this->_pool[$shardid] = new \Swoole\Coroutine\Channel($maxObjCount);
+
+            //一次性创建好所有连接
+            //失败一个会异常抛出
+
+            for ($count = 0; $count < $maxObjCount; $count++) {
+                $obj = $this->getDriverObj($shardid);
+                $this->_pool[$shardid]->push($obj);
+            }
         }
     }
 
@@ -55,17 +63,23 @@ abstract class Pool
      */
     public function __call($name, $arguments)
     {
-        $obj = null;
+        $obj     = null;
+        $shardId = 0;
+
+        if ($this->_config["type"] == "sharding") {
+            $key     = current($arguments);
+            $shardId = Sharding::getHashId($key);
+        }
 
         try {
-            $obj = $this->fetchObj();
+            $obj = $this->fetchObj($shardId);
 
             $result = call_user_func_array(array(
                 $obj,
                 $name
             ), $arguments);
 
-            $this->recycleObj($obj);
+            $this->recycleObj($shardId, $obj);
 
             return $result;
         } catch (\Exception $e) {
@@ -76,13 +90,18 @@ abstract class Pool
 
     /////////////////////////////////////////////////////
 
-    private function fetchObj()
+    /**
+     * 从池中拉获取一个可用redis连接
+     * @return mixed
+     * @throws \Exception
+     */
+    public function fetchObj(int $shardId)
     {
         //pool is empty and have idle space
-        if ($this->_pool->isEmpty() && ($this->_invokeObjCount + $this->_pool->length() < $this->_maxObjCount)) {
+        if ($this->_pool[$shardId]->isEmpty() && ($this->_invokeObjCount + $this->_pool[$shardId]->length() < $this->_maxObjCount)) {
             try {
                 $this->_invokeObjCount++;
-                $obj = $this->getDriverObj();
+                $obj = $this->getDriverObj($shardId);
             } catch (\Exception $e) {
                 $this->_invokeObjCount--;
                 throw $e;
@@ -93,7 +112,7 @@ abstract class Pool
 
         //channel have obj
         //fetch obj by 3 second wait
-        $obj = $this->_pool->pop(3.0);
+        $obj = $this->_pool[$shardId]->pop(3.0);
 
         if ($obj !== FALSE) {
             //increase count
@@ -109,9 +128,14 @@ abstract class Pool
      * 获取数据对象，return对象即可
      * @return mixed
      */
-    abstract public function getDriverObj();
+    abstract public function getDriverObj(int $shard);
 
-    private function recycleObj($obj)
+    /**
+     * 回收一个连接
+     * @param $obj
+     * @return mixed|void
+     */
+    public function recycleObj(int $shardId, $obj)
     {
         if (empty($obj)) {
             return;
@@ -120,7 +144,7 @@ abstract class Pool
         //decrease count
         $this->_invokeObjCount--;
 
-        return $this->_pool->push($obj);
+        return $this->_pool[$shardId]->push($obj);
     }
 
     abstract public function onError($obj, $e);

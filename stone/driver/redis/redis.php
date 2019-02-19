@@ -2,81 +2,41 @@
 
 namespace WhetStone\Stone\Driver\Redis;
 
-/**
- * 基础新版Redis驱动做的
- * 新版本明确服务器不可回应时抛出异常
- *
- * Class Redis
- * @package WhetStone\Stone\Driver\Redis
- */
+
 class Redis
 {
-    private $config = null;
 
-    private $dbName = "";
+    private static $connection = array();
 
-    private $redis = null;
-
-    public function __construct($dbname, $config)
+    public static function Factory($db, $driver = "predis")
     {
-        $this->dbName = $dbname;
-        $this->config = $config;
 
-        //do connect
-        $this->reconnect();
-    }
-
-    //if connection is broken reconnect
-    public function checkConnection()
-    {
-        try {
-            if ($this->redis->ping() != "+PONG") {
-                $this->reconnect();
-            }
-        } catch (\Exception $e) {
-            $this->reconnect();
-        }
-    }
-
-    public function reconnect()
-    {
-        $this->redis = new \Redis();
-        
-        //connect the server
-        $ret = $this->redis->connect($this->config["host"], $this->config["port"], $this->config["timeout"] ?? 0);
-        if (!$ret) {
-            throw new \Exception("connect Redis Server fail:" . $this->redis->getLastError(), -24);
+        //直接返回
+        if (isset(self::$connection[$db]) && !empty(self::$connection[$db])) {
+            return self::$connection[$db];
         }
 
-        $this->redis->setOption(\Redis::OPT_SCAN, \Redis::SCAN_RETRY);
-        $this->redis->setOption(\Redis::OPT_READ_TIMEOUT, -1);
-
-        //prefix
-        if (isset($this->config["prefix"]) && !empty($this->config["prefix"])) {
-            $this->redis->setOption(\Redis::OPT_PREFIX, $this->config["prefix"]);
+        //check config
+        $config = \WhetStone\Stone\Config::getConfig("redis");
+        if (!isset($config[$db]) || empty($config[$db])) {
+            throw new \Exception("Redis Config $db Not found!", -521);
         }
 
-        //auth
-        if (isset($this->config["auth"]) && !empty($this->config["auth"])) {
-            if ($this->redis->auth($this->config["auth"]) == FALSE) {
-                throw new \Exception("Redis auth fail.dbname:" . $this->dbName, -23);
-            }
+        //默认连接池最大数
+        if(!isset($config[$db]["pool"]) || $config[$db]["pool"] <= 0){
+            $config[$db]["pool"] = 20;
         }
 
-        //db
-        if (isset($this->config["db"]) && !empty($this->config["db"])) {
-            $this->redis->select($this->config["db"]);
+        //driver select
+        if ($driver == "phpredis") {
+            $pool = new \WhetStone\Stone\Driver\Redis\PHPRedis\RedisPool($config[$db]["pool"], 3.0, $db, $config[$db]);
+        } else if ($driver == "predis") {
+            $pool = new \WhetStone\Stone\Driver\Redis\Predis\PRedisPool($config[$db]["pool"], 3.0, $db, $config[$db]);
+        }else{
+            throw new \Exception("unknow redis driver type:$driver"-522);
         }
 
-
-    }
-
-    public function __call($name, $arguments)
-    {
-        //check is work well
-        $this->checkConnection();
-
-        //do the cmd，如果刚检测完还报错，那。。。
-        return call_user_func_array(array($this->redis, $name), $arguments);
+        self::$connection[$db] = $pool;
+        return $pool;
     }
 }

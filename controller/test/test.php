@@ -17,13 +17,13 @@ class Test extends \WhetStone\Stone\Controller
         $request = $context->getRequest();
         $param = $request->getGet();
 
-        $redis = \WhetStone\Stone\Di::get("predis");
+        $redis = \WhetStone\Stone\Driver\Redis\Redis::Factory("test_redis_common");
 
         $redis->set("a","aa");
         $ret = $redis->get("a");
         if($ret != "aa"){
             echo 12;
         }
-        return $this->showJson("nothing to do",-123);
+        return $this->showJson("nothing to do",-123,$param);
     }
 }
