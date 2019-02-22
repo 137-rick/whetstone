@@ -98,8 +98,15 @@ if (isset($params["c"])) {
 if (isset($params['d'])) {
     ini_set("display_errors", "On");
     error_reporting(E_ALL);
+    //no daemonize
     $config["swoole"]["daemonize"] = 0;
+    //base server
     $config["server"]["process_mode"] = SWOOLE_BASE;
+    //one worker
+    $config["swoole"]["worker_num"] = 1;
+    //max_request
+    $config["swoole"]["max_request"] = 1;
+
     echo "opened the debug info for console.." . PHP_EOL;
 } else {
     ini_set("display_errors", "Off");
