@@ -31,7 +31,7 @@ class Manager
         $processMode = SWOOLE_PROCESS;
 
         //是否开启debug模式，如果开启将会使用base模式执行
-        if (isset($this->config["debug"]) && $this->config["debug"]) {
+        if (isset($this->config["server"]["process_mode"]) && $this->config["server"]["process_mode"]) {
             $processMode = SWOOLE_BASE;
         }
         //register main server

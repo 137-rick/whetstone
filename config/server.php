@@ -1,9 +1,6 @@
 <?php
 ini_set("memory_limit","2G");
 return array(
-    //debug 模式
-    "debug" => false,
-
     //主服务，选主服务 建议按 websocket（http） > http > udp || tcp 顺序创建 ,websocket只能作为主进程
     "server" => array(
         "server"   => 'http',
@@ -65,7 +62,7 @@ return array(
 
         //swoole 日志级别 Info
         'log_level'               => 2,
-        'log_file'                => '/home/logs/server/stone.log',
+        'log_file'                => '/var/log/stone.log',
 
         'task_tmpdir' => '/dev/shm/',
 

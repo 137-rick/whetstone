@@ -32,7 +32,7 @@ abstract class Pool
      * @param float $waitTimeout 连接池满等待超时时间
      * @param array $config 数据连接配置
      */
-    public function __construct($maxObjCount = 50, $waitTimeout = 3.0, $config = array())
+    public function __construct($maxObjCount = 50, $waitTimeout = -1, $config = array())
     {
         $this->_maxObjCount = $maxObjCount;
         $this->_waitDelay   = $waitTimeout;

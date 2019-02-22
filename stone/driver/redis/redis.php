@@ -33,9 +33,9 @@ class Redis
 
         //driver select
         if ($driver == "phpredis") {
-            $pool = new \WhetStone\Stone\Driver\Redis\PHPRedis\RedisPool($config[$db]["pool"], 3.0, $db, $config[$db]);
+            $pool = new \WhetStone\Stone\Driver\Redis\PHPRedis\RedisPool($config[$db]["pool"], -1, $db, $config[$db]);
         } else if ($driver == "predis") {
-            $pool = new \WhetStone\Stone\Driver\Redis\Predis\PRedisPool($config[$db]["pool"], 3.0, $db, $config[$db]);
+            $pool = new \WhetStone\Stone\Driver\Redis\Predis\PRedisPool($config[$db]["pool"], -1, $db, $config[$db]);
         }else{
             throw new \Exception("unknow redis driver type:$driver"-522);
         }

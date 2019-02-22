@@ -19,10 +19,7 @@ function help()
     $helpDom .= "\t-c config.php\t set config file" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
-    $helpDom .= "\t-d\t\tclose daemon mode. debug mode" . PHP_EOL;
-    $helpDom .= "" . PHP_EOL;
-
-    $helpDom .= "\t-v\t\tshow php debug info on console" . PHP_EOL;
+    $helpDom .= "\t-d\t\tshow php debug info on console,and no daemon,and swoole base mode. only for debug" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
     $helpDom .= "\t-p\t\tpid file path" . PHP_EOL;
@@ -65,6 +62,23 @@ if (swoole_version() < 4) {
     die('swoole extension version is wrong. you must run this on 4.x version' . PHP_EOL);
 }
 
+$extensionList = array(
+    "pcntl",
+    "mysqli",
+    "memcached",
+    "pdo_mysql",
+    "mbstring",
+    "json",
+    "curl",
+    "bcmath",
+    "redis",
+);
+foreach ($extensionList as $extenName){
+    if(!extension_loaded($extenName)){
+        die($extenName . ' extension must install' . PHP_EOL);
+    }
+}
+
 //parser argument
 $params = getopt('hvdc:p:');
 
@@ -81,18 +95,15 @@ if (isset($params["c"])) {
 }
 
 //debug mode
-if (isset($params['v'])) {
+if (isset($params['d'])) {
     ini_set("display_errors", "On");
     error_reporting(E_ALL);
+    $config["swoole"]["daemonize"] = 0;
+    $config["server"]["process_mode"] = SWOOLE_BASE;
     echo "opened the debug info for console.." . PHP_EOL;
 } else {
     ini_set("display_errors", "Off");
     error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
-}
-
-//daemon mode default not
-if (isset($params["d"])) {
-    $config["swoole"]["daemonize"] = 0;
 }
 
 //pid file
