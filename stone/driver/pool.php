@@ -18,7 +18,7 @@ abstract class Pool
     protected $_waitDelay = 3.0;
 
     //整体最多连接数
-    private $_maxObjCount = 50;
+    private $_maxObjCount = 20;
 
     //正在被调用个数
     private $_invokeObjCount = 0;
@@ -29,7 +29,7 @@ abstract class Pool
     /**
      * Fend_Pool constructor.
      * @param int $maxObjCount 最大连接数
-     * @param float $waitTimeout 连接池满等待超时时间
+     * @param float|int $waitTimeout 连接池满等待超时时间
      * @param array $config 数据连接配置
      */
     public function __construct($maxObjCount = 50, $waitTimeout = -1, $config = array())
@@ -107,6 +107,7 @@ abstract class Pool
 
     /**
      * 从池中拉获取一个可用redis连接
+     * @param int $shardId Redis分区id
      * @return mixed
      * @throws \Exception
      */
@@ -141,19 +142,21 @@ abstract class Pool
 
     /**
      * 获取数据对象，return对象即可
+     * @param int $shard 分区id
      * @return mixed
      */
     abstract public function getDriverObj(int $shard);
 
     /**
      * 回收一个连接
+     * @param int $shardId 分区id
      * @param $obj
-     * @return mixed|void
+     * @return mixed
      */
     public function recycleObj(int $shardId, $obj)
     {
         if (empty($obj)) {
-            return;
+            return null;
         }
 
         //decrease count
