@@ -182,9 +182,7 @@ class Base
     /**
      * work中投递任务时发生的回调事件
      * @param \swoole_server $server
-     * @param $task_id
-     * @param $src_worker_id
-     * @param $data
+     * @param \Swoole\Server\Task $task
      */
     public function onTask(\swoole_server $server, \Swoole\Server\Task $task)
     {

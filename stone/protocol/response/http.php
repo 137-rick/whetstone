@@ -104,6 +104,15 @@ class Http
     }
 
     /**
+     * 设置返回 http code
+     * @param int $httpCode
+     * @return mixed
+     */
+    public function setStatus(int $httpCode){
+        return $this->response->status($httpCode);
+    }
+
+    /**
      * 结束链接，返回所有数据，如果keepalive不会断开
      * @param string $data
      * @return mixed

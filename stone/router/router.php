@@ -56,6 +56,7 @@ class Router
             case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                 //$allowedMethods = $routeInfo[1];
                 // ... 405 Method Not Allowed
+                \WhetStone\Stone\Context::getContext()->getResponse()->setStatus(405);
                 throw new \Exception("Request Method Not Allowed", 405);
                 break;
             case \FastRoute\Dispatcher::FOUND:
@@ -119,21 +120,33 @@ class Router
     public function defaultRouter($uri)
     {
 
-        if(empty($uri)){
+        if (empty($uri)) {
             throw new \Exception("uri is empty", -111);
         }
 
-        $uri = trim($uri,"/");
-        $uri = explode("/", $uri);
-        $function = array_pop($uri);
-        $className = "\\WhetStone\\Controller\\".implode("\\", $uri);
+        $uri       = trim($uri, "/");
+        $uri       = explode("/", $uri);
+
+        if($uri[0] === ""){
+            $className = "\\WhetStone\\Controller\\Index";
+
+            if(class_exists($className) && method_exists($className,"index")){
+                return $className->index();
+            }
+            //找不到
+            \WhetStone\Stone\Context::getContext()->getResponse()->setStatus(404);
+            throw new \Exception("Default Router index/index Handle define Class Not Found", -110);
+        }
+
+        $function  = array_pop($uri);
+        $className = "\\WhetStone\\Controller\\" . implode("\\", $uri);
 
         //第一次尝试，直接找对应类，找不到再尝试默认index
-        if(class_exists($className)){
+        if (class_exists($className)) {
 
             $controller = new $className();
 
-            if(method_exists($controller, $function)){
+            if (method_exists($controller, $function)) {
                 //invoke controller and get result
                 return $controller->$function();
             }
@@ -141,15 +154,15 @@ class Router
         }
 
         //找回分离出去的路径
-        $className = $className . "\\" . $function ;
-        $function = "index";
+        $className = $className . "\\" . $function;
+        $function  = "index";
 
         //再次尝试
-        if(class_exists($className)){
+        if (class_exists($className)) {
 
             $controller = new $className();
 
-            if(method_exists($controller, $function)){
+            if (method_exists($controller, $function)) {
                 //invoke controller and get result
                 return $controller->$function();
             }
@@ -157,7 +170,8 @@ class Router
         }
 
         //找不到了
-        throw new \Exception("Default Router $uri Handle define Class Not Found", -109);
+        \WhetStone\Stone\Context::getContext()->getResponse()->setStatus(404);
+        throw new \Exception("Default Router ".$className." Handle define Class Not Found", -109);
 
     }
 

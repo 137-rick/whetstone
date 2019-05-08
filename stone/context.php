@@ -202,7 +202,7 @@ class Context
 
     /**
      * 获取到response
-     * @return mixed
+     * @return \WhetStone\Stone\Protocol\Response\
      */
     public function getResponse(){
         return $this->data["response"];
