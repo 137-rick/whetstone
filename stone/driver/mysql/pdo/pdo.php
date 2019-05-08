@@ -1,6 +1,6 @@
 <?php
 
-namespace WhetStone\Stone\Driver\Mysql;
+namespace WhetStone\Stone\Driver\Mysql\PDO;
 
 class PDO
 {
@@ -9,7 +9,11 @@ class PDO
 
     private $dbName = "";
 
+    /**
+     * @var \PDO
+     */
     private $mysql = null;
+
 
     public function __construct($config, $dbName)
     {
@@ -72,7 +76,25 @@ class PDO
             $result["affect_count"] = $handle->execute($param);
         }
 
-        $result["result"] = $handle->fetchAll(PDO::FETCH_ASSOC);
+        $result["result"] = $handle->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function exec($sql)
+    {
+        $result = 0;
+        try{
+            $handle = $this->mysql->query($sql);
+            $result = $handle->rowCount();
+        }catch (\PDOException $e){
+            //todo:错误日志
+            //retry
+            $this->reconnect();
+            $handle = $this->mysql->query($sql);
+            $result = $handle->rowCount();
+        }
+
+        return $result;
     }
 
 }

@@ -51,7 +51,7 @@ class Redis
         $this->redis = new \Redis();
 
         //connect the server
-        $ret = $this->redis->connect($this->config["host"], $this->config["port"], $this->config["timeout"] ?? 0);
+        $ret = $this->redis->connect($this->config["host"], $this->config["port"] ?? 6379, $this->config["timeout"] ?? 0);
         if (!$ret) {
             throw new \Exception("connect Redis Server fail db:" . $this->dbName . " error:" . $this->redis->getLastError(), -24);
         }

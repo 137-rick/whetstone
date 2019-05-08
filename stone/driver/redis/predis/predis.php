@@ -58,7 +58,7 @@ class PRedis
         $config = array(
             "scheme" => "tcp",
             "host" => $this->config["host"],
-            "port" => $this->config["port"],
+            "port" => $this->config["port"] ?? 6379,
         );
 
         $option = array();
