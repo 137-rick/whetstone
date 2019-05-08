@@ -37,16 +37,18 @@ class Manager
         //register main server
         $serverType = strtolower($this->config["server"]["server"]);
         if ($serverType == "websocket") {
-            $server = new \Swoole\WebSocket\Server($this->config["server"]["host"], $this->config["server"]["port"],$processMode);
+            $server = new \Swoole\WebSocket\Server($this->config["server"]["host"], $this->config["server"]["port"], $processMode);
         } elseif ($serverType == "http") {
             $server = new \Swoole\Http\Server($this->config["server"]["host"], $this->config["server"]["port"], $processMode);
         } elseif ($serverType == "tcp") {
-            $server = new \Swoole\Server($this->config["server"]["host"], $this->config["server"]["port"],$processMode);
+            $server = new \Swoole\Server($this->config["server"]["host"], $this->config["server"]["port"], $processMode);
         } elseif ($serverType == "udp") {
             $server = new \Swoole\Server($this->config["server"]["host"], $this->config["server"]["port"], $processMode, SWOOLE_SOCK_UDP);
         } else {
             throw new \Exception("unknow config type of server server", -12);
         }
+
+        echo "Server:" . $serverType . " host:" . $this->config["server"]["host"] . ":" . $this->config["server"]["port"] ." id:Main". PHP_EOL;
 
         //set option
         $server->set($this->config["swoole"]);
@@ -84,6 +86,7 @@ class Manager
             } elseif ($listenConfig["server"] == "udp") {
                 $port = $server->addlistener($listenConfig["host"], $listenConfig["port"], SWOOLE_SOCK_UDP);
             }
+            echo "Server:" . $listenConfig["server"] . " host:" . $listenConfig["host"] . ":" . $listenConfig["port"] . " id:".$serverName .  PHP_EOL;
 
             //set the port obj
             Di::set("port_" . $serverName, $port);
