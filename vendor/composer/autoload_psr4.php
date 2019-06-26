@@ -9,4 +9,7 @@ return array(
     'WhetStone\\' => array($baseDir . '/'),
     'Predis\\' => array($vendorDir . '/predis/predis/src'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
+    'EagleEye\\Trace\\' => array($vendorDir . '/xcl3721/eagleeye/src/trace'),
+    'EagleEye\\Log\\' => array($vendorDir . '/xcl3721/eagleeye/src/log'),
+    'EagleEye\\Dump\\' => array($vendorDir . '/xcl3721/eagleeye/src/dump'),
 );

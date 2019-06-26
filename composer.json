@@ -17,6 +17,9 @@
   "require": {
     "nikic/fast-route": "1.3.0",
     "predis/predis": "1.1.1",
+    "xcl3721/eagleeye": "^0.2.4"
+  },
+  "require-dev": {
     "easyswoole/swoole-ide-helper": "^1.2"
   }
 }

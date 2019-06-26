@@ -46,12 +46,6 @@ class Response
     public function status($http_code, $reason=null){}
 
     /**
-     * @param $compress_level[optional]
-     * @return mixed
-     */
-    public function gzip($compress_level=null){}
-
-    /**
      * @param $key[required]
      * @param $value[required]
      * @param $ucwords[optional]
@@ -62,10 +56,14 @@ class Response
     /**
      * @param $key[required]
      * @param $value[required]
-     * @param $ucwords[optional]
      * @return mixed
      */
-    public function trailer($key, $value, $ucwords=null){}
+    public function trailer($key, $value){}
+
+    /**
+     * @return mixed
+     */
+    public function ping(){}
 
     /**
      * @param $content[required]

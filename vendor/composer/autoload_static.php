@@ -23,6 +23,12 @@ class ComposerStaticInit491b5e2792f97ae29f9debb5d867a786
         array (
             'FastRoute\\' => 10,
         ),
+        'E' => 
+        array (
+            'EagleEye\\Trace\\' => 15,
+            'EagleEye\\Log\\' => 13,
+            'EagleEye\\Dump\\' => 14,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -37,6 +43,18 @@ class ComposerStaticInit491b5e2792f97ae29f9debb5d867a786
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
+        ),
+        'EagleEye\\Trace\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/xcl3721/eagleeye/src/trace',
+        ),
+        'EagleEye\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/xcl3721/eagleeye/src/log',
+        ),
+        'EagleEye\\Dump\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/xcl3721/eagleeye/src/dump',
         ),
     );
 

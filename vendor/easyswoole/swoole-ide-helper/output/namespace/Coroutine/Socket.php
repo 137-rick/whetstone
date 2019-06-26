@@ -4,15 +4,17 @@ namespace Swoole\Coroutine;
 class Socket
 {
 
+    public $fd;
     public $errCode;
+    public $errMsg;
 
     /**
      * @param $domain[required]
      * @param $type[required]
-     * @param $protocol[required]
+     * @param $protocol[optional]
      * @return mixed
      */
-    public function __construct($domain, $type, $protocol){}
+    public function __construct($domain, $type, $protocol=null){}
 
     /**
      * @param $address[required]
@@ -56,6 +58,20 @@ class Socket
     public function send($data, $timeout=null){}
 
     /**
+     * @param $length[optional]
+     * @param $timeout[optional]
+     * @return mixed
+     */
+    public function recvAll($length=null, $timeout=null){}
+
+    /**
+     * @param $data[required]
+     * @param $timeout[optional]
+     * @return mixed
+     */
+    public function sendAll($data, $timeout=null){}
+
+    /**
      * @param $peername[required]
      * @param $timeout[optional]
      * @return mixed
@@ -71,6 +87,32 @@ class Socket
     public function sendto($addr, $port, $data){}
 
     /**
+     * @param $level[required]
+     * @param $opt_name[required]
+     * @return mixed
+     */
+    public function getOption($level, $opt_name){}
+
+    /**
+     * @param $level[required]
+     * @param $opt_name[required]
+     * @param $opt_value[required]
+     * @return mixed
+     */
+    public function setOption($level, $opt_name, $opt_value){}
+
+    /**
+     * @param $how[required]
+     * @return mixed
+     */
+    public function shutdown($how){}
+
+    /**
+     * @return mixed
+     */
+    public function close(){}
+
+    /**
      * @return mixed
      */
     public function getpeername(){}
@@ -79,16 +121,6 @@ class Socket
      * @return mixed
      */
     public function getsockname(){}
-
-    /**
-     * @return mixed
-     */
-    public function getSocket(){}
-
-    /**
-     * @return mixed
-     */
-    public function close(){}
 
 
 }

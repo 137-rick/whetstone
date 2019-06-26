@@ -1,39 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "453ef72dcb6ee78e669075ec354010e0",
+    "content-hash": "4dea673af8a9296f0ffdff3140cc0dfb",
     "packages": [
-        {
-            "name": "easyswoole/swoole-ide-helper",
-            "version": "1.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/easy-swoole/ide-helper.git",
-                "reference": "a6c7e013934b0663e1dac41cdc5dc5c85534c331"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/easy-swoole/ide-helper/zipball/a6c7e013934b0663e1dac41cdc5dc5c85534c331",
-                "reference": "a6c7e013934b0663e1dac41cdc5dc5c85534c331",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Team Swoole",
-                    "email": "team@swoole.com"
-                }
-            ],
-            "description": "swoole-ide-helper",
-            "time": "2018-12-25T07:27:15+00:00"
-        },
         {
             "name": "nikic/fast-route",
             "version": "v1.3.0",
@@ -129,9 +101,70 @@
                 "redis"
             ],
             "time": "2016-06-16T16:22:20+00:00"
+        },
+        {
+            "name": "xcl3721/eagleeye",
+            "version": "0.2.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xcl3721/eagleeye.git",
+                "reference": "7fc198b444c54d4d8681f94658b28ab8000b54e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/xcl3721/eagleeye/zipball/7fc198b444c54d4d8681f94658b28ab8000b54e5",
+                "reference": "7fc198b444c54d4d8681f94658b28ab8000b54e5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "EagleEye\\Dump\\": "src/dump",
+                    "EagleEye\\Log\\": "src/log",
+                    "EagleEye\\Trace\\": "src/trace"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Swoole EagleEye Log Class",
+            "time": "2019-06-26T04:44:39+00:00"
         }
     ],
-    "packages-dev": [],
+    "packages-dev": [
+        {
+            "name": "easyswoole/swoole-ide-helper",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/easy-swoole/ide-helper.git",
+                "reference": "767f87773c444aede2e18a683a31107f7bdd6459"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/easy-swoole/ide-helper/zipball/767f87773c444aede2e18a683a31107f7bdd6459",
+                "reference": "767f87773c444aede2e18a683a31107f7bdd6459",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Swoole",
+                    "email": "team@swoole.com"
+                }
+            ],
+            "description": "swoole-ide-helper",
+            "time": "2019-05-16T06:47:22+00:00"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
