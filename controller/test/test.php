@@ -6,14 +6,13 @@ use WhetStone\Stone\Context;
 class Test extends \WhetStone\Stone\Controller
 {
 
-    public function index($context)
+    public function index($context, $request, $response)
     {
         return $this->showJson("success",0);
     }
 
-    public function info($context)
+    public function info($context, $request, $response)
     {
-        $request = $context->getRequest();
         $param = $request->getGet();
 
         $redis = \WhetStone\Stone\Driver\Redis\Redis::Factory("test_redis_shard");
@@ -27,7 +26,7 @@ class Test extends \WhetStone\Stone\Controller
         return $this->showJson("nothing to do",-123,$param);
     }
 
-    public function status($context)
+    public function status($context, $request, $response)
     {
         $redis = \WhetStone\Stone\Driver\Redis\Redis::Factory("test_redis_shard");
         $connection = $redis->getConnectionStatus();

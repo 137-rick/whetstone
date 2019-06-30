@@ -35,6 +35,7 @@ class Router
 
     /**
      * 根据method及uri调用对应配置的类
+     * @param \WhetStone\Stone\Context $context
      * @param string $method
      * @param string $uri
      * @throws \Exception
@@ -92,11 +93,11 @@ class Router
                     }
 
                     //invoke controller and get result
-                    return $controller->$func($context);
+                    return $controller->$func($context, $request, $context->getResponse());
 
                 } else if (is_callable($handler)) {
                     //call direct when router define an callable function
-                    return call_user_func($handler,$context);
+                    return call_user_func_array($handler, [$context, $request, $context->getResponse()]);
                 } else {
                     throw new \Exception("Router Config error on handle." . $uri, -108);
                 }
@@ -111,6 +112,7 @@ class Router
      * 如果fastrouter没有设置路由，那么会请求到这里
      * 默认路由会根据uri到对应目录找文件，找到会调用他
      * 这么做是为了方便开发，个性设置走个性设置，常规默认能工作
+     * @param \WhetStone\Stone\Context $context
      * @param string $uri
      * @throws \Exception
      * @return string
@@ -129,9 +131,9 @@ class Router
             $className = "\\WhetStone\\Controller\\Index";
 
             if(class_exists($className) && method_exists($className,"index")){
-                return $className->index($context);
+                return $className->index($context, $context->getRequest(), $context->getResponse());
             }
-            //找不到
+            //找不到404
             \WhetStone\Stone\Context::getContext()->getResponse()->setStatus(404);
             throw new \Exception("Default Router index/index Handle define Class Not Found", -110);
         }
@@ -146,7 +148,7 @@ class Router
 
             if (method_exists($controller, $function)) {
                 //invoke controller and get result
-                return $controller->$function($context);
+                return $controller->$function($context, $context->getRequest(), $context->getResponse());
             }
 
         }
@@ -162,7 +164,7 @@ class Router
 
             if (method_exists($controller, $function)) {
                 //invoke controller and get result
-                return $controller->$function($context);
+                return $controller->$function($context, $context->getRequest(), $context->getResponse());
             }
 
         }
