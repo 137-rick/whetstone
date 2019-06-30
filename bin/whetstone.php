@@ -52,16 +52,6 @@ function help()
 /// Main
 ////////////////////////
 
-//check the swoole extension is exist
-if (!extension_loaded('swoole')) {
-    die('swoole extension was not found' . PHP_EOL);
-}
-
-//check version of swoole
-if (swoole_version() < 4) {
-    die('swoole extension version is wrong. you must run this on 4.x version' . PHP_EOL);
-}
-
 $extensionList = array(
     "pcntl",
     "mysqli",
@@ -72,11 +62,17 @@ $extensionList = array(
     "curl",
     "bcmath",
     "redis",
+    "swoole",
 );
 foreach ($extensionList as $extenName){
     if(!extension_loaded($extenName)){
         die($extenName . ' extension must install' . PHP_EOL);
     }
+}
+
+//check version of swoole
+if (swoole_version() < 4) {
+    die('swoole extension version is wrong. you must run this on 4.x version' . PHP_EOL);
 }
 
 //parser argument
