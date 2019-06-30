@@ -1,6 +1,6 @@
 <?php
 
-namespace WhetStone;
+namespace WhetStone\Event;
 
 
 /**
@@ -8,21 +8,35 @@ namespace WhetStone;
  * 利用event注册功能，我们可以在事件产生时触发用户自定义回调
  * 这里就是一个简单的http router调用回调注册样例
  *
- * Class EventRegister
- * @package WhetStone
+ * Class Hook
+ * @package WhetStone\Event
  */
-class EventRegister
+class Hook
 {
 
     public function __construct()
     {
 
-        //worker刚启动时都加载那些内容
-        //放在这里是为了未来reload使用
+        //on worker start init some event
+        //放在这里初始化框架 方便 reload时大部分功能重新加载
+        //如果这里报异常，会产生大量日志
+        $this->onWorkerStart();
+
+        //Main 是主服务别名，下划线后是事件名，具体事件名可以在protocol下参考event的fire函数
+        //公用事件请参考stone\server\event内注释
+        $this->onMainServerRequest();
+
+        //拦截掉所有Exception异常
+        //到此步骤后都是worker和业务报错
+        $this->onException();
+
+    }
+
+    public function onWorkerStart(){
 
         \WhetStone\Stone\Server\Event::register("worker_start", function ($param) {
 
-            //load all config
+            //load all config file on config folder
             \WhetStone\Stone\Config::loadAllConfig();
 
             //set router config to di
@@ -31,10 +45,9 @@ class EventRegister
 
         });
 
-        //on worker start init some event
-        //Main 是主服务别名，下划线后是事件名，具体事件名可以在protocol下参考event的fire函数
-        //公用事件请参考stone\server\event内注释
-        //目前所有异常都在根协程
+    }
+
+    public function onMainServerRequest(){
 
         \WhetStone\Stone\Server\Event::register("Main_request", function ($param) {
 
@@ -74,9 +87,10 @@ class EventRegister
             }
 
         });
+    }
 
-        //最后拦截掉所有Exception异常
-        //因为再产生异常都是worker和业务了
+    public function onException(){
+
         \WhetStone\Stone\Server\Event::register("exception", function ($param) {
             if(preg_match("/cli/i", php_sapi_name())){
                 $e = $param["exception"];

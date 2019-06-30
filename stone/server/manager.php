@@ -109,9 +109,9 @@ class Manager
         //这里已经执行了加载了大部分框架所需
         //剩余的都是请求期间处理
 
-        if (!empty($this->config["event"]["register"])) {
-            //invoke register event
-            $eventClassName = $this->config["event"]["register"];
+        if (!empty($this->config["event"]["hook"])) {
+            //invoke hook event
+            $eventClassName = $this->config["event"]["hook"];
             $this->event    = new $eventClassName();
         }
 

@@ -28,7 +28,7 @@ class Event
     /////////////
     /// 通讯事件
     /////////////
-    /// 来自于/config/server.php
+    /// 来自于/bin/config.php
     /// 主服务使用Main_事件
     /// 子监听使用 子端口服务名称_事件
     /// 具体事件在stone/protocol/下查看

@@ -1,5 +1,6 @@
 <?php
 require_once "../init.php";
+ini_set("memory_limit","2G");
 
 function help()
 {
@@ -8,7 +9,7 @@ function help()
     $helpDom .= "=======================================" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
-    $helpDom .= "CMD: php whetstone.php -c ../config/server.php start" . PHP_EOL;
+    $helpDom .= "CMD: php whetstone.php -c config.php start" . PHP_EOL;
     $helpDom .= "" . PHP_EOL;
 
     $helpDom .= "Option:" . PHP_EOL;

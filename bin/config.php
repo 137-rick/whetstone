@@ -1,5 +1,5 @@
 <?php
-ini_set("memory_limit","2G");
+
 return array(
     //主服务，选主服务 建议按 websocket（http） > http > udp || tcp 顺序创建 ,websocket只能作为主进程
     "server" => array(
@@ -22,6 +22,7 @@ return array(
                 "host"     => "0.0.0.0",
                 "port"     => 6375,
 
+                //sub server append setting
                 "set"      => array(
 
                 ),
@@ -30,14 +31,16 @@ return array(
     ),
 
     "event" => array(
-        //事件注册器，用于用户注册系统事件监听
-        "register" => "\WhetStone\EventRegister",
+        //事件注册器，用于用户注册系统事件，如启动，请求，错误
+        "hook" => "\WhetStone\Event\Hook",
     ),
 
+    //main server setting
+    //http://wiki.swoole.com
     "swoole" => array(
         'user'               => 'nobody',
         'group'              => 'nobody',
-        'dispatch_mode'      => 3,
+        'dispatch_mode'      => 1,
         'package_max_length' => 2097152,
         // 1024 * 1024 * 2,
         'buffer_output_size' => 3145728,
