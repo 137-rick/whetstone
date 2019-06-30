@@ -35,7 +35,7 @@ class Event
     ////////////
 
     /**
-     * 注册Event
+     * 注册Event可注册多个，按注册顺序执行
      * @param $event
      * @param $callable
      * @throws \Exception

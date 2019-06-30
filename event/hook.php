@@ -40,6 +40,8 @@ class Hook
             \WhetStone\Stone\Config::loadAllConfig();
 
             //set router config to di
+            //框架相关动态创建的数据支撑都扔到DI内管理
+            //业务代码禁止注入到DI
             $routerConfig = \WhetStone\Stone\Config::getConfig("router");
             \WhetStone\Stone\Di::set("router", new \WhetStone\Stone\Router\Router($routerConfig));
 
@@ -68,7 +70,7 @@ class Hook
                 //查找并执行router.php内的handle
                 //返回结果只有两种情况，一种直接返回，一种是异常
                 //返回格式由controller决定
-                $result = $router->dispatch($method, $uri);
+                $result = $router->dispatch($context, $method, $uri);
 
                 //获取response对象
                 $response = $context->get("response");

@@ -40,7 +40,7 @@ class Router
      * @throws \Exception
      * @return string
      */
-    public function dispatch($method, $uri)
+    public function dispatch($context, $method, $uri)
     {
 
         //解析路由
@@ -51,19 +51,17 @@ class Router
             case\FastRoute\Dispatcher::NOT_FOUND:
                 // ... 404 Not Found
                 //try default router
-                return $this->defaultRouter($uri);
+                return $this->defaultRouter($context, $uri);
                 break;
             case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                 //$allowedMethods = $routeInfo[1];
                 // ... 405 Method Not Allowed
-                \WhetStone\Stone\Context::getContext()->getResponse()->setStatus(405);
+                $context->getResponse()->setStatus(405);
                 throw new \Exception("Request Method Not Allowed", 405);
                 break;
             case \FastRoute\Dispatcher::FOUND:
                 $handler = $routeInfo[1];
                 $vars    = $routeInfo[2];
-
-                $context = \WhetStone\Stone\Context::getContext();
                 //拿到request对象
                 $request = $context->getRequest();
                 //设置网址内包含的参数
@@ -94,11 +92,11 @@ class Router
                     }
 
                     //invoke controller and get result
-                    return $controller->$func();
+                    return $controller->$func($context);
 
                 } else if (is_callable($handler)) {
                     //call direct when router define an callable function
-                    return call_user_func($handler);
+                    return call_user_func($handler,$context);
                 } else {
                     throw new \Exception("Router Config error on handle." . $uri, -108);
                 }
@@ -117,7 +115,7 @@ class Router
      * @throws \Exception
      * @return string
      */
-    public function defaultRouter($uri)
+    public function defaultRouter($context, $uri)
     {
 
         if (empty($uri)) {
@@ -131,7 +129,7 @@ class Router
             $className = "\\WhetStone\\Controller\\Index";
 
             if(class_exists($className) && method_exists($className,"index")){
-                return $className->index();
+                return $className->index($context);
             }
             //找不到
             \WhetStone\Stone\Context::getContext()->getResponse()->setStatus(404);
@@ -148,7 +146,7 @@ class Router
 
             if (method_exists($controller, $function)) {
                 //invoke controller and get result
-                return $controller->$function();
+                return $controller->$function($context);
             }
 
         }
@@ -164,7 +162,7 @@ class Router
 
             if (method_exists($controller, $function)) {
                 //invoke controller and get result
-                return $controller->$function();
+                return $controller->$function($context);
             }
 
         }
