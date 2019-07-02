@@ -35,7 +35,7 @@ class Event
     ////////////
 
     /**
-     * 注册Event可注册多个，按注册顺序执行
+     * 注册Event可注册多个，按注册顺序执行，此操作会追加事件在后面
      * @param $event
      * @param $callable
      * @throws \Exception
@@ -46,6 +46,20 @@ class Event
             throw new \Exception("hook register an wrong callable", -443);
         }
         self::$_eventList[$event][] = $callable;
+    }
+
+    /**
+     * 注册Event可注册多个，会按顺序执行，此操作会在所有事件之前
+     * @param $event
+     * @param $callable
+     * @throws \Exception
+     */
+    public static function registerFirst($event, $callable)
+    {
+        if (!is_callable($callable)) {
+            throw new \Exception("hook register an wrong callable", -443);
+        }
+        array_unshift(self::$_eventList[$event], $callable);
     }
 
     /**
@@ -66,7 +80,8 @@ class Event
      * 取消所有已注册事件
      * @param $event
      */
-    public static function clean($event){
+    public static function clean($event)
+    {
         unset(self::$_eventList[$event]);
     }
 
@@ -75,9 +90,9 @@ class Event
      * @param $event
      * @return bool 如果已经存在，返回true
      */
-    public static function checkRegisted($event){
-        if (isset(self::$_eventList[$event])
-            && !empty(self::$_eventList[$event])) {
+    public static function checkRegisted($event)
+    {
+        if (isset(self::$_eventList[$event]) && !empty(self::$_eventList[$event])) {
             return true;
         }
         return false;
