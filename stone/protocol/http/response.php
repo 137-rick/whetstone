@@ -1,13 +1,13 @@
 <?php
 
-namespace WhetStone\Stone\Protocol\Response;
+namespace WhetStone\Stone\Protocol\Http;
 
 /**
  * Http协议返回结果封装
  * Class Http
- * @package WhetStone\Stone\Protocol\Response
+ * @package WhetStone\Stone\Protocol\Http\Response
  */
-class Http
+class Response
 {
 
     /**

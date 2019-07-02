@@ -1,13 +1,13 @@
 <?php
 
-namespace WhetStone\Stone\Protocol;
+namespace WhetStone\Stone\Protocol\Websocket;
 
 use WhetStone\Stone\Server\Event;
 
 /**
  * websocket协议回调封装
  * Class Websocket
- * @package WhetStone\Stone\Protocol
+ * @package WhetStone\Stone\Protocol\Websocket
  */
 class Websocket
 {

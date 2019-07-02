@@ -1,13 +1,13 @@
 <?php
 
-namespace WhetStone\Stone\Protocol\Request;
+namespace WhetStone\Stone\Protocol\Http;
 
 /**
  * Http协议请求对象封装
  * Class Http
- * @package WhetStone\Stone\Protocol\Request
+ * @package WhetStone\Stone\Protocol\Http\Request
  */
-class Http
+class Request
 {
 
     /**

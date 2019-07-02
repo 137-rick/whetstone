@@ -1,13 +1,13 @@
 <?php
 
-namespace WhetStone\Stone\Protocol;
+namespace WhetStone\Stone\Protocol\Http;
 
 use WhetStone\Stone\Server\Event;
 
 /**
  * Http协议回调封装
  * Class Http
- * @package WhetStone\Stone\Protocol
+ * @package WhetStone\Stone\Protocol\Http
  */
 class HTTP
 {
@@ -42,8 +42,8 @@ class HTTP
         $context = \WhetStone\Stone\Context::createContext();
 
         $context->setAll(array(
-                "request"  => new \WhetStone\Stone\Protocol\Request\Http($request),
-                "response" => new \WhetStone\Stone\Protocol\Response\Http($response),
+                "request"  => new \WhetStone\Stone\Protocol\Http\Request($request),
+                "response" => new \WhetStone\Stone\Protocol\Http\Response($response),
             ));
 
         Event::fire($this->_name . "_" . "request", $context);
