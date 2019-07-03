@@ -13,10 +13,10 @@ class ValidateFilter
     {
         $result = [];
 
-        foreach ($rule as $ruleItem) {
+        foreach ($rule["rule"] as $ruleItem) {
 
             //require check
-            if ($ruleItem["require"] == 1 && (!isset($param[$ruleItem["key"]]) || strlen($param[$ruleItem["key"]]) == 0)) {
+            if (isset($ruleItem["require"]) && $ruleItem["require"] == 1 && (!isset($param[$ruleItem["key"]]) || strlen($param[$ruleItem["key"]]) == 0)) {
                 throw new \Exception("参数" . $ruleItem["key"] . " 必填", 3001);
             }
 
@@ -36,7 +36,7 @@ class ValidateFilter
         return $result;
     }
 
-    private function filterParam($key, $val, $type, $limit)
+    private static function filterParam($key, $val, $type, $limit)
     {
 
         //check type
@@ -75,6 +75,11 @@ class ValidateFilter
                 }
                 if (!($val = filter_var($val, FILTER_VALIDATE_EMAIL))) {
                     throw new \Exception("参数" . $key . " 只接受合法email格式数据", 3002);
+                }
+                return $val;
+            case "enum":
+                if(!in_array($val,$limit)){
+                    throw new \Exception("参数" . $key . " 选项不在有效可选范围内", 3002);
                 }
                 return $val;
             default:

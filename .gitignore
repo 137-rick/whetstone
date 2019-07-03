@@ -1,3 +1,5 @@
 .idea/
 *.log
 vendor/
+coverage/
+.DS_Store
