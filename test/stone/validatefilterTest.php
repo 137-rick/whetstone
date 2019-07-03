@@ -4,7 +4,7 @@ namespace WhetStone\Test\Stone;
 
 use PHPUnit\Framework\TestCase;
 
-class validatefilter extends TestCase
+class ValidateFilterTest extends TestCase
 {
     public function testparam()
     {
