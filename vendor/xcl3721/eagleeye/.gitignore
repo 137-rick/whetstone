@@ -1,8 +1,0 @@
-/.idea/
-.DS_Store
-*.pid
-/nbproject/private/
-/nbproject/*
-/.project
-/vendor/
-composer.lock

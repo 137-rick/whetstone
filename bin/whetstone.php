@@ -102,7 +102,7 @@ if (isset($params['d'])) {
     //one worker
     $config["swoole"]["worker_num"] = 1;
     //max_request
-    //$config["swoole"]["max_request"] = 1;
+    $config["swoole"]["max_request"] = 2;
 
     echo "opened the debug info for console.." . PHP_EOL;
 } else {
