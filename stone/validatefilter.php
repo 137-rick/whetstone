@@ -18,7 +18,7 @@ class ValidateFilter
             //key
             $key = $ruleItem["key"] ? strval($ruleItem["key"]) : "";
 
-            if($key === ""){
+            if ($key === "") {
                 throw new \Exception("规则错误", 3000);
             }
 
@@ -55,7 +55,7 @@ class ValidateFilter
         //check type
         switch (strtolower($type)) {
             case "bool":
-                return ($val === true || strtolower($val) == "true" || intval($val) === 1) ? true : false;
+                return filter_var($val, FILTER_VALIDATE_BOOLEAN);
             case "int":
                 if (strlen($val) > 0 && !is_numeric($val)) {
                     throw new \Exception("参数" . $key . " 只接受数值", 3002);
@@ -95,6 +95,11 @@ class ValidateFilter
                     throw new \Exception("参数" . $key . " 选项不在有效可选范围内", 3002);
                 }
                 return $val;
+            case "callback":
+                if(is_callable($limit)){
+                    throw new \Exception("参数" . $key . " 验证规则非法", 3004);
+                }
+                return $limit($key, $val, $limit);
             default:
                 //regx
                 if (strpos($type, "reg:") === 0) {
