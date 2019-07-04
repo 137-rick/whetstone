@@ -15,29 +15,36 @@ class ValidateFilter
 
         foreach ($rule["rule"] as $ruleItem) {
 
-            //filter value
-            if(isset($ruleItem["require"])){
-                $param[$ruleItem["key"]] = strval($param[$ruleItem["key"]]);
+            //key
+            $key = $ruleItem["key"] ? strval($ruleItem["key"]) : "";
+
+            if($key === ""){
+                throw new \Exception("规则错误", 3000);
             }
 
+            //filter value
+            $val = isset($param[$key]) ? strval($param[$key]) : "";
+
             //require check
-            if (isset($ruleItem["require"]) && $ruleItem["require"] == 1 && (!isset($param[$ruleItem["key"]]) || strlen($param[$ruleItem["key"]]) == 0)) {
+            if ($val === "" && !empty($ruleItem["require"])) {
                 throw new \Exception("参数" . $ruleItem["key"] . " 必填", 3001);
             }
 
+            //default for empty
+            if ($val === "" && isset($ruleItem["default"])) {
+                $val = $ruleItem["default"];
+            }
+
             //other empty value will not check
-            if (!isset($param[$ruleItem["key"]]) || empty($param[$ruleItem["key"].""])) {
-                //return default
-                if (isset($ruleItem["default"])) {
-                    $result[$ruleItem["key"]] = $ruleItem["default"];
-                }
+            if ($val === "") {
                 //ignore
                 continue;
             }
-            $limit = isset($ruleItem["limit"])?$ruleItem["limit"]:null;
+
+            $limit = isset($ruleItem["limit"]) ? $ruleItem["limit"] : null;
 
             //filter var
-            $result[$ruleItem["key"]] = self::filterParam($ruleItem["key"], $param[$ruleItem["key"]], $ruleItem["type"], $limit);
+            $result[$ruleItem["key"]] = self::filterParam($key, $val, $ruleItem["type"], $limit);
         }
         return $result;
     }
@@ -84,7 +91,7 @@ class ValidateFilter
                 }
                 return $val;
             case "enum":
-                if(!in_array($val,$limit)){
+                if (!in_array($val, $limit)) {
                     throw new \Exception("参数" . $key . " 选项不在有效可选范围内", 3002);
                 }
                 return $val;
