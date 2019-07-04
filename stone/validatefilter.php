@@ -1,7 +1,7 @@
 <?php
+declare(strict_types=1);
 
 namespace WhetStone\Stone;
-
 /**
  * 验证参数，并且根据规则对数据进行转换
  * Class ValidateFilter
@@ -15,13 +15,18 @@ class ValidateFilter
 
         foreach ($rule["rule"] as $ruleItem) {
 
+            //filter value
+            if(isset($ruleItem["require"])){
+                $param[$ruleItem["key"]] = strval($param[$ruleItem["key"]]);
+            }
+
             //require check
             if (isset($ruleItem["require"]) && $ruleItem["require"] == 1 && (!isset($param[$ruleItem["key"]]) || strlen($param[$ruleItem["key"]]) == 0)) {
                 throw new \Exception("参数" . $ruleItem["key"] . " 必填", 3001);
             }
 
             //other empty value will not check
-            if (!isset($param[$ruleItem["key"]]) || strlen($param[$ruleItem["key"]]) == 0) {
+            if (!isset($param[$ruleItem["key"]]) || empty($param[$ruleItem["key"].""])) {
                 //return default
                 if (isset($ruleItem["default"])) {
                     $result[$ruleItem["key"]] = $ruleItem["default"];
@@ -29,9 +34,10 @@ class ValidateFilter
                 //ignore
                 continue;
             }
+            $limit = isset($ruleItem["limit"])?$ruleItem["limit"]:null;
 
             //filter var
-            $result[$ruleItem["key"]] = self::filterParam($ruleItem["key"], $param[$ruleItem["key"]], $ruleItem["type"], $ruleItem["limit"]);
+            $result[$ruleItem["key"]] = self::filterParam($ruleItem["key"], $param[$ruleItem["key"]], $ruleItem["type"], $limit);
         }
         return $result;
     }
@@ -42,7 +48,7 @@ class ValidateFilter
         //check type
         switch (strtolower($type)) {
             case "bool":
-                return (strtolower($val) == "true" || intval($val) === 1) ? true : false;
+                return ($val === true || strtolower($val) == "true" || intval($val) === 1) ? true : false;
             case "int":
                 if (strlen($val) > 0 && !is_numeric($val)) {
                     throw new \Exception("参数" . $key . " 只接受数值", 3002);
@@ -62,7 +68,7 @@ class ValidateFilter
                 if (strlen($val) > 0 && !is_string($val)) {
                     throw new \Exception("参数" . $key . " 只接受string类型", 3002);
                 }
-                if (isset($limit) && (strlen($val) < $limit[0] || strlen($val) > $limit[1])) {
+                if (!empty($limit) && (strlen($val) < $limit[0] || strlen($val) > $limit[1])) {
                     throw new \Exception("参数" . $key . " 长度限制在" . $limit[0] . "-" . $limit[1] . "之间", 3002);
                 }
                 return $val;
@@ -70,7 +76,7 @@ class ValidateFilter
                 if (strlen($val) > 0 && !is_string($val)) {
                     throw new \Exception("参数" . $key . " 只接受string类型", 3002);
                 }
-                if (isset($limit) && (strlen($val) < $limit[0] || strlen($val) > $limit[1])) {
+                if (!empty($limit) && (strlen($val) < $limit[0] || strlen($val) > $limit[1])) {
                     throw new \Exception("参数" . $key . " 长度限制在" . $limit[0] . "-" . $limit[1] . "之间", 3002);
                 }
                 if (!($val = filter_var($val, FILTER_VALIDATE_EMAIL))) {
@@ -86,7 +92,7 @@ class ValidateFilter
                 //regx
                 if (strpos($type, "reg:") === 0) {
                     //limit len
-                    if (isset($limit) && (strlen($val) < $limit[0] || strlen($val) > $limit[1])) {
+                    if (!empty($limit) && (strlen($val) < $limit[0] || strlen($val) > $limit[1])) {
                         throw new \Exception("参数" . $key . " 长度限制在" . $limit[0] . "-" . $limit[1] . "之间", 3002);
                     }
 

@@ -14,7 +14,7 @@ class ValidateFilterTest extends TestCase
         $param = [
             "bool"   => "-1",
             "uid"    => "1232324",
-            "float"  => "23.1",
+            "float"  => 23.1,
             "double" => "23.1",
             "string" => "string",
             "email"  => "xcl_rockman@qq.com",
@@ -24,6 +24,18 @@ class ValidateFilterTest extends TestCase
             "url"    => "http://www.tal.com/haha/info",
             "method" => "post",
             "desc"   => "这个接口是用来展示用的",
+            "demo"   => [
+                [
+                    'bool'   => false,
+                    'uid'    => 1232324,
+                    'float'  => 23.1,
+                    'double' => 23.1,
+                    'email'  => 'xcl_rockman@qq.com',
+                    'string' => 'string',
+                    'tel'    => 1,
+                    'enum'   => 3,
+                ]
+            ],
             "rule"   => [
                 [
                     "key"     => "bool",
