@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace WhetStone\Test\Stone;
 
@@ -77,9 +78,8 @@ class ValidateFilterTest extends TestCase
                 ],
                 [
                     "key"     => "tel",
-                    "type"    => "tel",
-                    "default" => 1,
-                    "desc"    => "用户uid"
+                    "type"    => "string",
+                    "desc"    => "用户电话"
                 ],
                 [
                     "key"   => "enum",
