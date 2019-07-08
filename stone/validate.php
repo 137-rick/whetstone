@@ -55,7 +55,7 @@ class Validate
      * @param string $desc 参数用途介绍
      * @param bool $require 是否必填
      * @param string $default 默认参数
-     * @param array $limit 可选项或长度限制
+     * @param mixed $limit enum为可选项数组，数值时为取值范围，字符串类型时为限制长度
      * @throws \Exception
      */
     public function addRule($key, $type, $desc, $require = false, $default = "", $limit = [])
