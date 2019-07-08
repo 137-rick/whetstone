@@ -1,54 +1,85 @@
 <?php
 
 namespace WhetStone\Stone;
+
 /**
- * 验证参数，并且根据规则对数据进行转换
- * Class ValidateFilter
+ * 统一验证类，用于统一参数验证及文档生成
+ * Class Validate
  * @package WhetStone\Stone
  */
-class ValidateFilter
+class Validate
 {
-    public static function getParam($param, $rule)
+
+    //api访问网址或uri
+    private $api;
+
+    //接口功能介绍
+    private $desc;
+
+    //请求类型，可选post get del put rpcx等
+    private $method;
+
+    //接口调用演示数据，可多组
+    private $demo = [];
+
+    //参数规则
+    private $rule = [];
+
+    /**
+     * 验证类
+     * Validate constructor.
+     * @param $api
+     * @param $desc
+     * @param $method
+     */
+    public function __construct($api, $desc, $method)
     {
-        $result = [];
-
-        foreach ($rule["rule"] as $ruleItem) {
-
-            //key
-            $key = $ruleItem["key"] ? strval($ruleItem["key"]) : "";
-
-            if ($key === "") {
-                throw new \Exception("参数验证规则错误:没有指定key", 3000);
-            }
-
-            //filter value
-            $val = isset($param[$key]) ? strval($param[$key]) : "";
-
-            //require check
-            if ($val === "" && !empty($ruleItem["require"])) {
-                throw new \Exception("参数" . $ruleItem["key"] . " 必填", 3001);
-            }
-
-            //default for empty
-            if ($val === "" && isset($ruleItem["default"])) {
-                $val = $ruleItem["default"];
-            }
-
-            //other empty value will not check
-            if ($val === "") {
-                //ignore
-                continue;
-            }
-
-            $limit = isset($ruleItem["limit"]) ? $ruleItem["limit"] : null;
-
-            //filter var
-            $result[$ruleItem["key"]] = self::filterParam($key, $val, $ruleItem["type"], $limit);
-        }
-        return $result;
+        $this->api    = $api;
+        $this->desc   = $desc;
+        $this->method = $method;
     }
 
-    private static function filterParam($key, $val, $type, $limit)
+    /**
+     * 添加演示参数
+     * @param $param
+     */
+    public function addDemoParameter($param)
+    {
+        $this->demo[] = $param;
+    }
+
+    /**
+     * 添加参数规则
+     * @param string $key 参数key
+     * @param string $type 参数类型
+     * @param string $desc 参数用途介绍
+     * @param bool $require 是否必填
+     * @param string $default 默认参数
+     * @param array $limit 可选项或长度限制
+     * @throws \Exception
+     */
+    public function addRule($key, $type, $desc, $require = false, $default = "", $limit = [])
+    {
+        //key 必填
+        if (empty($key)) {
+            throw new \Exception("参数过滤规则必填", 3001);
+        }
+
+        //type 必填
+        if (empty($type)) {
+            throw new \Exception("参数类型必填", 3003);
+        }
+
+        //desc 必填
+        if (empty($desc)) {
+            throw new \Exception("请说明参数用途", 3005);
+        }
+
+        //记录rule规则
+        $this->rule[$key] = [$type, $limit, $require, $default, $desc];
+    }
+
+    private function filterParam($key, $val, $type, $limit)
     {
 
         //check type
@@ -107,6 +138,7 @@ class ValidateFilter
                 if (is_callable($limit)) {
                     throw new \Exception("参数" . $key . " 验证规则非法", 3004);
                 }
+
                 return $limit($key, $val);
             default:
                 //regx
@@ -126,4 +158,53 @@ class ValidateFilter
                 throw new \Exception("参数" . $key . " 未知" . $type . "类型定义", 3009);
         }
     }
+
+    public function checkParam($param)
+    {
+        $result = [];
+
+        //interrupt the rest code
+        if($param["tal_sec"]== "show_param_json"){
+            echo $this->showDoc();
+            exit;
+        }
+
+        //check parameters
+        foreach ($this->rule as $key => $rule) {
+
+            //empty
+            if (!isset($param[$key]) || $param[$key] === "") {
+
+                //require will alert
+                if ($rule[2]) {
+                    throw new \Exception($key . "参数必填", 3004);
+                }
+
+                //default
+                if ($rule[3] != "") {
+                    $result[$key] = $rule[3];
+                }
+
+            }
+
+            $val = strval($param[$key]);
+
+            $result[$key] = $this->filterParam($key, $val, $rule[0], $rule[3]);
+        }
+
+        return $result;
+    }
+
+    public function showDoc($format = "json")
+    {
+        return json_encode([
+            "api"    => $this->api,
+            "method" => $this->method,
+            "desc"   => $this->desc,
+            "demo"   => $this->demo,
+            "param"  => $this->rule,
+        ]);
+    }
+
+
 }
